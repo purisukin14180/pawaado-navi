@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-KFYD72JSBG"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-KFYD72JSBG');
+    </script>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>特能図鑑 | プリスキンのパワアド育成ナビ</title>
+    <style>
+        :root {
+            --story-bg: #4a2f1a;
+            --story-paper: #e9d5b5;
+            --story-panel: #7c5535;
+            --story-border: #9e7a5c;
+            --story-accent: #d35400;
+            --story-text: #3e2714;
+            --story-text-light: #f4ece0;
+            --nav-height: 60px;
+            
+            --color-act-blue: #3498db;
+            --color-act-gold: #f39c12;
+            --color-spec-blue: #2980b9;
+            --color-spec-red: #c0392b;
+            --color-spec-gold: #d4af37;
+            --color-hissatsu: linear-gradient(45deg, #d35400, #f1c40f, #e67e22);
+        }
+
+        body {
+            font-family: 'Hiragino Kaku Gothic ProN', 'Hiragino Sans', Meiryo, serif;
+            margin: 0; padding: 0; background-color: var(--story-bg);
+            background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADIAAAAyCAMAAAAp4BCFAAAABGdBTUEAALGPC/xhBQAAAAFzUkdCAK7OHOkAAAAzUExURf///8DAwL+/v76+vr29vby8vLu7u7m5ubm5ubm5ubm5ubm5ubm5ubm5ubm5ubm5ubm5ucp7H40AAAAQdFJOUwAgMEBQYHCAgI+fmKCgoMCwS645uAAAARRJREFUOMuVlVuWwyAMRAtIGOf+V22S45K8S9NfWp445SNoAt4H6I8f/wP0Zf8A/bHjL4B+0T8A/Xz9F0Df6B+AftY/AP14/Rdgf9A/oF9b/wXon8ZfAP4M+XNk49L4XwD+DPlzZOPS+FsAfgz5c2Tj0vgXIBuXxn8BsnFp/BcAW79uXBr/AsTWX7f9K4CtXzcu5V+AbFwa/wXA1q8bl8p/AbLx68al/AsAW79unMpfALb+2u1PAbLxK7Y7BcjGr9juFCAbt2K7XwCx9etWbE8Btv7alXcB2vYvX94CaNu/fPkXoG375etXgL7Y7BcgW//15U8AsvVfV94FyNafX3kXQNv6S9f/AVp55SND5bU6AAAAAElFTkSuQmCC');
+            color: var(--story-text-light); line-height: 1.6;
+        }
+
+        /* ===== 共通ナビゲーション ===== */
+        .topnav {
+            display: flex; justify-content: flex-start; align-items: center;
+            background: #2c1a0c; color: #fff; height: var(--nav-height); padding: 0 10px;
+            position: sticky; top: 0; z-index: 1000; border-bottom: 3px solid var(--story-accent);
+        }
+        .nav-links { display: flex; overflow-x: auto; white-space: nowrap; gap: 5px; width: 100%; }
+        .nav-links::-webkit-scrollbar { display: none; }
+        .nav-links a { color: #fff; text-decoration: none; padding: 8px 12px; font-size: 0.9rem; font-weight: bold; border-radius: 4px; }
+        .nav-links a.current { background: var(--story-accent); }
+
+        .container { display: flex; max-width: 1400px; margin: 0 auto; min-height: calc(100vh - 120px); }
+
+        /* サイドバー */
+        .sidebar { 
+            width: 300px; background: var(--story-panel); padding: 20px; border-right: 2px solid var(--story-border); 
+            height: calc(100vh - 60px); position: sticky; top: 60px; box-sizing: border-box; overflow-y: auto;
+        }
+        .sidebar h3 { font-size: 1.1rem; margin: 0 0 20px; color: var(--story-paper); border-left: 4px solid var(--story-accent); padding-left: 10px; text-shadow: 1px 1px 0 rgba(0,0,0,0.5); }
+        
+        .search-input { width: 100%; padding: 12px; border: 1px solid var(--story-border); border-radius: 4px; margin-bottom: 20px; font-size: 0.9rem; background: var(--story-paper); color: var(--story-text); box-sizing: border-box; outline: none; }
+
+        .filter-section { margin-bottom: 15px; border: 1px solid var(--story-border); border-radius: 4px; overflow: hidden; background: rgba(0,0,0,0.1); }
+        .filter-title { font-size: 0.8rem; font-weight: bold; background: rgba(0,0,0,0.2); color: var(--story-paper); padding: 8px 12px; border-bottom: 1px solid var(--story-border); }
+        .filter-options { padding: 8px; }
+        select { width: 100%; padding: 10px; border: 1px solid var(--story-border); border-radius: 4px; font-size: 0.85rem; outline: none; background: #604028; color: var(--story-paper); }
+
+        .main { flex: 1; padding: 20px; }
+        .main h1 { font-size: 1.4rem; margin: 0 0 20px; color: var(--story-paper); text-shadow: 2px 2px 0 rgba(0,0,0,0.5); }
+
+        /* 特能カード */
+        .ability-card { 
+            background: var(--story-paper); border-radius: 4px; padding: 16px; margin-bottom: 15px; 
+            box-shadow: 4px 4px 0px rgba(0,0,0,0.2); border: 1px solid #c9ad88; border-left-width: 10px;
+            color: var(--story-text);
+        }
+        
+        .cat-hissatsu { border-left: 10px solid; border-image: var(--color-hissatsu) 1; }
+
+        .card-top { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 10px; }
+        .ability-title { font-size: 1.1rem; font-weight: 800; color: var(--story-text); }
+        
+        .cat-badge { font-size: 0.65rem; font-weight: 900; color: #fff; padding: 3px 10px; border-radius: 4px; box-shadow: 1px 1px 2px rgba(0,0,0,0.2); }
+
+        .cost-grid { 
+            display: grid; grid-template-columns: repeat(5, 1fr); gap: 4px; 
+            background: rgba(0,0,0,0.05); padding: 8px; border-radius: 4px; margin-bottom: 10px; text-align: center;
+            border: 1px dashed #c9ad88;
+        }
+        .cost-item { display: flex; flex-direction: column; font-size: 0.7rem; }
+        .cost-label { color: #8a6d55; font-weight: bold; }
+        .cost-val { color: var(--story-text); font-weight: 900; }
+
+        .effect-box { padding: 12px; background: #dfccaf; border: 1px solid #c9ad88; border-radius: 4px; font-size: 0.85rem; font-weight: bold; color: var(--story-text); }
+        .condition-text { font-size: 0.75rem; color: #7c5535; margin-top: 8px; display: block; font-weight: bold; }
+
+        /* ===== 共通フッター ===== */
+        footer { text-align: center; padding: 40px 15px; background: #2c1a0c; color: #888; margin-top: 40px; border-top: 2px solid var(--story-border); }
+        .footer-nav { display: flex; flex-wrap: wrap; justify-content: center; gap: 15px; font-size: 0.85rem; margin-bottom: 20px; }
+        .footer-nav a { color: #fff; text-decoration: none; opacity: 0.7; }
+        .copyright { font-size: 0.75rem; color: #666; }
+
+        @media (max-width: 900px) { 
+            .container { flex-direction: column; } 
+            .sidebar { width: 100%; height: auto; position: relative; top: 0; border-right: none; border-bottom: 2px solid var(--story-border); }
+        }
+    </style>
+</head>
+<body>
+
+<header class="topnav">
+    <nav class="nav-links">
+        <a href="index.html">ホーム</a>
+        <a href="simulator.html">シミュレーター</a>
+        <a href="search.html" class="current">特能図鑑</a>
+    </nav>
+</header>
+
+<div class="container">
+    <div class="sidebar">
+        <h3>特能を絞り込む</h3>
+        <input type="text" id="q" class="search-input" placeholder="名前や効果で検索...">
+
+        <div class="filter-section">
+            <div class="filter-title">カテゴリ</div>
+            <div class="filter-options">
+                <select id="fCat">
+                    <option value="">すべてのカテゴリ</option>
+                    <option value="アクションスキル・青">アクションスキル・青</option>
+                    <option value="アクションスキル・金">アクションスキル・金</option>
+                    <option value="特殊能力・青">特殊能力・青</option>
+                    <option value="特殊能力・青赤">特殊能力・青赤</option>
+                    <option value="特殊能力・金">特殊能力・金</option>
+                    <option value="必殺技・虹">必殺技・虹</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="filter-section">
+            <div class="filter-title">属性</div>
+            <div class="filter-options">
+                <select id="fAttr">
+                    <option value="">すべての属性</option>
+                    <option value="火属性">火属性</option>
+                    <option value="風属性">風属性</option>
+                    <option value="水属性">水属性</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="filter-section">
+            <div class="filter-title">ジョブ</div>
+            <div class="filter-options">
+                <select id="fJob">
+                    <option value="">すべてのジョブ</option>
+                    <option value="剣士">剣士</option>
+                    <option value="弓使い">弓使い</option>
+                    <option value="魔法使い">魔法使い</option>
+                    <option value="魔道士">魔道士</option>
+                </select>
+            </div>
+        </div>
+
+        <div id="resCount" style="font-size: 0.8rem; color: var(--story-paper); text-align: right; margin-top: 10px; font-weight: bold;">0 件ヒット</div>
+    </div>
+
+    <div class="main">
+        <h1>特能データベース</h1>
+        <div id="list">記録を読み込み中...</div>
+    </div>
+</div>
+
+<footer>
+    <div class="footer-nav">
+        <a href="index.html">ホーム</a>
+        <a href="simulator.html">シミュレーター</a>
+        <a href="search.html">特能図鑑</a>
+        <a href="terms.html">利用規約</a>
+        <a href="https://x.com/priskin_pawa" target="_blank">X (旧Twitter)</a>
+    </div>
+    <p class="copyright">
+        &copy; 2026 プリスキンのパワアド育成ナビ<br>
+        当サイトは個人によるファンサイトであり、公式とは関係ありません。
+    </p>
+</footer>
+
+<script src="support-skills.js"></script>
+<script src="action-skills.js"></script>
+<script src="hissatsu-skills.js"></script>
+
+<script>
+    const SPECIAL_ABILITIES = [
+        ...(typeof SUPPORT_SKILLS !== 'undefined' ? SUPPORT_SKILLS : []),
+        ...(typeof ACTION_SKILLS !== 'undefined' ? ACTION_SKILLS : []),
+        ...(typeof HISSATSU_SKILLS !== 'undefined' ? HISSATSU_SKILLS : [])
+    ];
+
+    const listEl = document.getElementById('list');
+    const qEl = document.getElementById('q');
+    const catEl = document.getElementById('fCat');
+    const attrEl = document.getElementById('fAttr');
+    const jobEl = document.getElementById('fJob');
+    const countEl = document.getElementById('resCount');
+
+    const config = {
+        "アクションスキル・青": { color: "var(--color-act-blue)", class: "" },
+        "アクションスキル・金": { color: "var(--color-act-gold)", class: "" },
+        "特殊能力・青": { color: "var(--color-spec-blue)", class: "" },
+        "特殊能力・青赤": { color: "var(--color-spec-red)", class: "" },
+        "特殊能力・金": { color: "var(--color-spec-gold)", class: "" },
+        "必殺技・虹": { color: "var(--color-hissatsu)", class: "cat-hissatsu" }
+    };
+
+    function render() {
+        const query = qEl.value.toLowerCase();
+        const category = catEl.value;
+        const attribute = attrEl.value;
+        const job = jobEl.value;
+
+        const filtered = SPECIAL_ABILITIES.filter(d => {
+            const searchTarget = `${d.name} ${d.effect} ${d.condition}`.toLowerCase();
+            const matchQ = !query || searchTarget.includes(query);
+            const matchCat = !category || d.category === category;
+            const matchAttr = !attribute || (d.condition && d.condition.includes(attribute));
+            const matchJob = !job || (d.condition && d.condition.includes(job));
+            return matchQ && matchCat && matchAttr && matchJob;
+        });
+
+        countEl.textContent = `${filtered.length} 件の記録が見つかりました`;
+        
+        if (filtered.length === 0) {
+            listEl.innerHTML = '<p style="text-align:center; padding:40px; color:var(--story-paper); font-weight:bold;">一致する能力は見つかりませんでした</p>';
+            return;
+        }
+
+        listEl.innerHTML = filtered.map(d => {
+            const style = config[d.category] || { color: "#8a6d55", class: "" };
+            let badgeBg = style.color;
+            if (d.category === "必殺技・虹") {
+                badgeBg = "linear-gradient(45deg, #d35400, #f1c40f, #e67e22)";
+            }
+            
+            return `
+                <div class="ability-card ${style.class}" style="border-left-color: ${style.color}">
+                    <div class="card-top">
+                        <div class="ability-title">${d.name}</div>
+                        <div class="cat-badge" style="background:${badgeBg}">${d.category}</div>
+                    </div>
+                    <div class="cost-grid">
+                        <div class="cost-item"><span class="cost-label">筋力</span><span class="cost-val">${d.costs.muscle}</span></div>
+                        <div class="cost-item"><span class="cost-label">敏捷</span><span class="cost-val">${d.costs.agile}</span></div>
+                        <div class="cost-item"><span class="cost-label">技術</span><span class="cost-val">${d.costs.tech}</span></div>
+                        <div class="cost-item"><span class="cost-label">知力</span><span class="cost-val">${d.costs.intel}</span></div>
+                        <div class="cost-item"><span class="cost-label">精神</span><span class="cost-val">${d.costs.mental}</span></div>
+                    </div>
+                    <div class="effect-box">効果: ${d.effect}</div>
+                    <span class="condition-text">修得条件: ${d.condition}</span>
+                </div>
+            `;
+        }).join('');
+    }
+
+    [qEl, catEl, attrEl, jobEl].forEach(el => el.addEventListener('input', render));
+    window.onload = render;
+</script>
+</body>
+</html>

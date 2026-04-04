@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-KFYD72JSBG"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-KFYD72JSBG');
+  </script>
+
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>プリスキンのパワアド育成ナビ - ホーム</title>
+  
+  <style>
+    :root {
+      --story-bg: #4a2f1a;
+      --story-paper: #e9d5b5;
+      --story-panel: #7c5535;
+      --story-border: #9e7a5c;
+      --story-accent: #d35400;
+      --story-text: #3e2714;
+      --story-text-light: #f4ece0;
+      --nav-height: 60px;
+    }
+
+    body {
+      font-family: 'Hiragino Kaku Gothic ProN', 'Hiragino Sans', Meiryo, serif;
+      margin: 0; padding: 0;
+      background-color: var(--story-bg);
+      background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADIAAAAyCAMAAAAp4BCFAAAABGdBTUEAALGPC/xhBQAAAAFzUkdCAK7OHOkAAAAzUExURf///8DAwL+/v76+vr29vby8vLu7u7m5ubm5ubm5ubm5ubm5ubm5ubm5ubm5ubm5ubm5ucp7H40AAAAQdFJOUwAgMEBQYHCAgI+fmKCgoMCwS645uAAAARRJREFUOMuVlVuWwyAMRAtIGOf+V22S45K8S9NfWp445SNoAt4H6I8f/wP0Zf8A/bHjL4B+0T8A/Xz9F0Df6B+AftY/AP14/Rdgf9A/oF9b/wXon8ZfAP4M+XNk49L4XwD+DPlzZOPS+FsAfgz5c2Tj0vgXIBuXxn8BsnFp/BcAW79uXBr/AsTWX7f9K4CtXzcu5V+AbFwa/wXA1q8bl8p/AbLx68al/AsAW79unMpfALb+2u1PAbLxK7Y7BcjGr9juFCAbt2K7XwCx9etWbE8Btv7alXcB2vYvX94CaNu/fPkXoG375etXgL7Y7BcgW//15U8AsvVfV94FyNafX3kXQNv6S9f/AVp55SND5bU6AAAAAElFTkSuQmCC');
+      color: var(--story-text-light);
+      line-height: 1.6;
+    }
+
+    /* ===== ナビゲーション ===== */
+    .topnav {
+      display: flex; justify-content: flex-start; align-items: center;
+      background: #2c1a0c; color: #fff; height: var(--nav-height); padding: 0 10px;
+      position: sticky; top: 0; z-index: 1000; border-bottom: 3px solid var(--story-accent);
+    }
+    .nav-links { display: flex; overflow-x: auto; white-space: nowrap; gap: 5px; width: 100%; }
+    .nav-links::-webkit-scrollbar { display: none; }
+    .nav-links a { color: #fff; text-decoration: none; padding: 8px 12px; font-size: 0.9rem; font-weight: bold; border-radius: 4px; }
+    .nav-links a.current { background: var(--story-accent); }
+
+    /* ===== ヒーローセクション ===== */
+    .hero {
+      text-align: center; padding: 60px 20px 80px; background-color: #3e2714;
+      background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADIAAAAyCAMAAAAp4BCFAAAABGdBTUEAALGPC/xhBQAAAAFzUkdCAK7OHOkAAAAzUExURf///8DAwL+/v76+vr29vby8vLu7u7m5ubm5ubm5ubm5ubm5ubm5ubm5ubm5ubm5ubm5ucp7H40AAAAQdFJOUwAgMEBQYHCAgI+fmKCgoMCwS645uAAAARRJREFUOMuVlVuWwyAMRAtIGOf+V22S45K8S9NfWp445SNoAt4H6I8f/wP0Zf8A/bHjL4B+0T8A/Xz9F0Df6B+AftY/AP14/Rdgf9A/oF9b/wXon8ZfAP4M+XNk49L4XwD+DPlzZOPS+FsAfgz5c2Tj0vgXIBuXxn8BsnFp/BcAW79uXBr/AsTWX7f9K4CtXzcu5V+AbFwa/wXA1q8bl8p/AbLx68al/AsAW79unMpfALb+2u1PAbLxK7Y7BcjGr9juFCAbt2K7XwCx9etWbE8Btv7alXcB2vYvX94CaNu/fPkXoG375etXgL7Y7BcgW//15U8AsvVfV94FyNafX3kXQNv6S9f/AVp55SND5bU6AAAAAElFTkSuQmCC');
+      color: var(--story-paper); clip-path: ellipse(160% 100% at 50% 0%); border-bottom: 2px solid var(--story-border);
+    }
+    .hero h1 { font-size: 1.8em; margin: 0 0 15px; text-shadow: 2px 2px 0px rgba(0,0,0,0.5); letter-spacing: 0.1em; }
+    .hero p { font-size: 0.95em; max-width: 600px; margin: 0 auto 30px; opacity: 0.9; }
+
+    /* メインボタン */
+    .hero-btns { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; max-width: 450px; margin: 0 auto; }
+    .hero-btns a {
+      display: flex; align-items: center; justify-content: center; padding: 14px 10px;
+      background: var(--story-paper); color: var(--story-text); text-decoration: none;
+      border-radius: 4px; font-weight: bold; font-size: 0.9rem; box-shadow: 3px 3px 0px rgba(0,0,0,0.3);
+      border: 1px solid var(--story-border); transition: transform 0.2s;
+    }
+    .hero-btns a:active { transform: scale(0.95); }
+    .hero-btns a.btn-primary { background: var(--story-accent); color: #fff; border-color: #e67e22; }
+
+    /* サブボタン（ブログ・X） */
+    .hero-sub-btns { display: flex; justify-content: center; gap: 10px; margin-top: 20px; }
+    .hero-sub-btns a {
+      font-size: 0.75rem; color: var(--story-paper); text-decoration: none; background: rgba(0,0,0,0.3);
+      padding: 5px 15px; border-radius: 20px; border: 1px solid var(--story-border); transition: 0.2s;
+    }
+    .hero-sub-btns a:hover { background: var(--story-accent); border-color: var(--story-paper); }
+
+    /* ===== コンテンツエリア ===== */
+    .container { max-width: 1000px; margin: -30px auto 40px; padding: 0 15px; }
+    .features {
+      background: var(--story-panel); border-radius: 12px; padding: 30px 20px;
+      box-shadow: 5px 5px 15px rgba(0,0,0,0.4); border: 2px solid var(--story-border);
+    }
+    .features h2 { text-align: center; color: var(--story-paper); margin-bottom: 25px; font-size: 1.4em; text-shadow: 1px 1px 0px rgba(0,0,0,0.5); }
+    .feature-grid { display: grid; grid-template-columns: 1fr; gap: 15px; }
+    .feature-item {
+      padding: 20px; border-radius: 8px; background: rgba(0,0,0,0.2); border: 1px solid var(--story-border);
+      text-decoration: none; color: var(--story-paper); display: block; transition: 0.2s;
+    }
+    .feature-item:hover { background: rgba(0,0,0,0.3); border-color: var(--story-accent); }
+    .feature-item h3 { margin: 0 0 10px 0; color: var(--story-paper); font-size: 1.1em; display: flex; align-items: center; gap: 8px; }
+    .feature-item p { font-size: 0.85em; color: #c9ad88; margin: 0; line-height: 1.6; }
+
+    /* ===== フッター ===== */
+    footer { text-align: center; padding: 40px 15px; background: #2c1a0c; color: #888; border-top: 2px solid var(--story-border); }
+    .footer-nav { display: flex; flex-wrap: wrap; justify-content: center; gap: 15px; font-size: 0.85rem; margin-bottom: 20px; }
+    .footer-nav a { color: #fff; text-decoration: none; opacity: 0.7; }
+    .copyright { font-size: 0.75rem; color: #666; }
+
+    @media (min-width: 768px) {
+      .hero { padding: 80px 20px 100px; }
+      .hero h1 { font-size: 2.5em; }
+      .feature-grid { grid-template-columns: 1fr 1fr; gap: 20px; }
+    }
+  </style>
+</head>
+
+<body>
+
+<header class="topnav">
+  <nav class="nav-links">
+    <a href="index.html" class="current">ホーム</a>
+    <a href="simulator.html">シミュレーター</a>
+    <a href="search.html">特能図鑑</a>
+  </nav>
+</header>
+
+<div class="hero">
+  <h1>プリスキンのパワアド育成ナビ</h1>
+  <p>
+    パワプロアドベンチャーズ（パワアド）の冒険を盤石に！<br>
+    経験点計算シミュレーターや特能図鑑で、理想の冒険者育成をサポートします。
+  </p>
+  <div class="hero-btns">
+    <a href="simulator.html" class="btn-primary">育成シミュレーター</a>
+    <a href="search.html">特能図鑑を見る</a>
+  </div>
+
+  <div class="hero-sub-btns">
+    <a href="https://www.myballpark-blog.com/" target="_blank">✒️ 冒険日誌（ブログ）</a>
+    <a href="https://x.com/priskin_pawa" target="_blank">🐦 ギルド連絡（X）</a>
+  </div>
+</div>
+
+<div class="container">
+  <section class="features">
+    <h2>冒険のしるべ</h2>
+    <div class="feature-grid">
+      <a href="simulator.html" class="feature-item">
+        <h3>📜 育成シミュレーター</h3>
+        <p>初期ステータスから目標値までに必要な「筋力・敏捷・技術・知力・精神」を自動計算。コツの割引計算にも完全対応した、育成の羅針盤です。</p>
+      </a>
+      <a href="search.html" class="feature-item">
+        <h3>📖 特能図鑑</h3>
+        <p>アクションスキル、サポートスキル（青・金・青赤）、必殺技を詳細にデータベース化。修得に必要な経験点や条件を、キーワードやジョブで瞬時に検索できます。</p>
+      </a>
+      <a href="https://www.myballpark-blog.com/" target="_blank" class="feature-item">
+        <h3>🖋️ パワアド攻略ブログ</h3>
+        <p>最新のイベント情報やおすすめキャラの紹介など、シミュレーターと合わせて読みたい攻略情報を日々更新中！</p>
+      </a>
+      <a href="https://x.com/priskin_pawa" target="_blank" class="feature-item">
+        <h3>📢 運営者のX（旧Twitter）</h3>
+        <p>シミュレーターの更新情報や、パワアドに関する雑談・最新ネタを発信しています。ご意見・ご質問もお気軽にどうぞ。</p>
+      </a>
+    </div>
+  </section>
+</div>
+
+<footer>
+  <div class="footer-nav">
+    <a href="index.html">ホーム</a>
+    <a href="simulator.html">シミュレーター</a>
+    <a href="search.html">特能図鑑</a>
+    <a href="terms.html">利用規約</a>
+    <a href="https://x.com/priskin_pawa" target="_blank">X (旧Twitter)</a>
+  </div>
+  <p class="copyright">
+    &copy; 2026 プリスキンのパワアド育成ナビ<br>
+    当サイトは個人によるファンサイトであり、公式とは関係ありません。
+  </p>
+</footer>
+
+</body>
+</html>

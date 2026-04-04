@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-KFYD72JSBG"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-KFYD72JSBG');
+    </script>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>利用規約 | プリスキンのパワアド育成ナビ</title>
+    
+    <style>
+        :root {
+            --story-bg: #4a2f1a;
+            --story-paper: #e9d5b5;
+            --story-panel: #7c5535;
+            --story-border: #9e7a5c;
+            --story-accent: #d35400;
+            --story-text: #3e2714;
+            --story-text-light: #f4ece0;
+            --nav-height: 60px;
+        }
+
+        body {
+            font-family: 'Hiragino Kaku Gothic ProN', 'Hiragino Sans', Meiryo, serif;
+            margin: 0; padding: 0;
+            background-color: var(--story-bg);
+            background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADIAAAAyCAMAAAAp4BCFAAAABGdBTUEAALGPC/xhBQAAAAFzUkdCAK7OHOkAAAAzUExURf///8DAwL+/v76+vr29vby8vLu7u7m5ubm5ubm5ubm5ubm5ubm5ubm5ubm5ubm5ubm5ucp7H40AAAAQdFJOUwAgMEBQYHCAgI+fmKCgoMCwS645uAAAARRJREFUOMuVlVuWwyAMRAtIGOf+V22S45K8S9NfWp445SNoAt4H6I8f/wP0Zf8A/bHjL4B+0T8A/Xz9F0Df6B+AftY/AP14/Rdgf9A/oF9b/wXon8ZfAP4M+XNk49L4XwD+DPlzZOPS+FsAfgz5c2Tj0vgXIBuXxn8BsnFp/BcAW79uXBr/AsTWX7f9K4CtXzcu5V+AbFwa/wXA1q8bl8p/AbLx68al/AsAW79unMpfALb+2u1PAbLxK7Y7BcjGr9juFCAbt2K7XwCx9etWbE8Btv7alXcB2vYvX94CaNu/fPkXoG375etXgL7Y7BcgW//15U8AsvVfV94FyNafX3kXQNv6S9f/AVp55SND5bU6AAAAAElFTkSuQmCC');
+            color: var(--story-text-light);
+            line-height: 1.8;
+        }
+
+        /* ===== 共通ナビゲーション ===== */
+        .topnav {
+            display: flex; justify-content: flex-start; align-items: center;
+            background: #2c1a0c; color: #fff; height: var(--nav-height); padding: 0 10px;
+            position: sticky; top: 0; z-index: 1000; border-bottom: 3px solid var(--story-accent);
+        }
+        .nav-links { display: flex; overflow-x: auto; white-space: nowrap; gap: 5px; width: 100%; }
+        .nav-links::-webkit-scrollbar { display: none; }
+        .nav-links a { color: #fff; text-decoration: none; padding: 8px 12px; font-size: 0.9rem; font-weight: bold; border-radius: 4px; }
+        .nav-links a.current { background: var(--story-accent); }
+
+        /* ===== ページヘッダー ===== */
+        .page-header {
+            text-align: center; padding: 50px 20px 70px; background-color: #3e2714;
+            background-image: url('data:image/png;base64,...'); /* 背景ノイズ省略 */
+            color: var(--story-paper); clip-path: ellipse(160% 100% at 50% 0%); border-bottom: 2px solid var(--story-border);
+        }
+        .page-header h1 { font-size: 1.8em; margin: 0; text-shadow: 2px 2px 0px rgba(0,0,0,0.5); letter-spacing: 0.1em; }
+
+        /* ===== メインコンテンツエリア ===== */
+        .container { max-width: 850px; margin: -30px auto 60px; padding: 0 15px; }
+
+        main {
+            background: var(--story-panel); padding: 40px; border-radius: 12px;
+            box-shadow: 5px 5px 15px rgba(0,0,0,0.4); border: 2px solid var(--story-border);
+            color: var(--story-paper);
+        }
+
+        h2 { display: flex; align-items: center; margin-top: 40px; font-size: 1.25rem; color: var(--story-paper); border-bottom: 2px solid var(--story-border); padding-bottom: 8px; text-shadow: 1px 1px 0 rgba(0,0,0,0.3); }
+        h2::before { content: "📜"; display: inline-block; margin-right: 12px; font-size: 1.1rem; }
+
+        p { margin: 15px 0; color: var(--story-paper); font-size: 0.95rem; opacity: 0.95; }
+        ul { padding-left: 0; list-style: none; }
+        li { position: relative; padding-left: 28px; margin-bottom: 12px; color: var(--story-paper); font-size: 0.95rem; opacity: 0.9; }
+        li::before { content: "◆"; position: absolute; left: 0; color: var(--story-accent); font-size: 0.85rem; top: 0px; }
+
+        .info-box { background: rgba(0, 0, 0, 0.2); border-left: 4px solid var(--story-accent); padding: 20px; margin: 25px 0; border-radius: 0 8px 8px 0; font-size: 0.9rem; color: var(--story-paper); }
+
+        /* ===== 共通フッター ===== */
+        footer { text-align: center; padding: 40px 15px; background: #2c1a0c; color: #888; margin-top: 20px; font-size: 0.75rem; border-top: 2px solid var(--story-border); }
+        .footer-nav { display: flex; flex-wrap: wrap; justify-content: center; gap: 15px; font-size: 0.85rem; margin-bottom: 20px; }
+        .footer-nav a { color: #fff; text-decoration: none; opacity: 0.7; }
+        .copyright { font-size: 0.75rem; color: #666; }
+
+        @media (max-width: 600px) { main { padding: 25px; } }
+    </style>
+</head>
+<body>
+
+<header class="topnav">
+    <nav class="nav-links">
+        <a href="index.html">ホーム</a>
+        <a href="simulator.html">シミュレーター</a>
+        <a href="search.html">特能図鑑</a>
+    </nav>
+</header>
+
+<div class="page-header">
+    <h1>利用規約</h1>
+</div>
+
+<div class="container">
+    <main>
+        <p>当サイト「プリスキンのパワアド育成ナビ」の利用に関して、以下の条件に同意いただいた場合に限りご利用ください。</p>
+
+        <h2>1. 免責事項</h2>
+        <p>掲載情報は管理人が独自に調査・収集したものであり、その正確性や完全性を保証するものではありません。ゲームの更新等により数値が異なる場合があります。当サイトの情報を利用したことによる損害について、一切の責任を負いかねます。</p>
+
+        <h2>2. ゲームデータについて</h2>
+        <div class="info-box">
+            当サイトで提供する育成コストや特殊能力のデータは、<strong>パワプロアドベンチャーズ</strong>（コナミデジタルエンタテインメント社）の内容を元にした非公式ファンサイトです。
+        </div>
+        <p>当サイトはゲーム公式とは一切関係がありません。情報の誤りに気付かれた場合は、運営者までご連絡いただけますと幸いです。</p>
+
+        <h2>3. 知的財産権</h2>
+        <p>独自文章およびプログラムの著作権は当運営者に帰属します。ゲーム内の名称、数値、属性等の著作権は権利者（コナミデジタルエンタテインメント社）に帰属します。無断でのシステム解析や営利目的の転載を禁止します。</p>
+
+        <h2>4. 禁止事項</h2>
+        <ul>
+            <li>当サイトの情報を営利目的、または有料コンテンツとして無断使用すること</li>
+            <li>自動化ツール（スクレイピング等）による過度な負荷をかける行為</li>
+            <li>当サイトのイメージを著しく損なう形での二次利用</li>
+        </ul>
+
+        <h2>5. 育成結果の共有について</h2>
+        <p>シミュレーターで算出した育成結果は、以下の用途で自由にご利用いただけます。</p>
+        <ul>
+            <li>個人ブログ（はてなブログ等）での攻略記事への掲載</li>
+            <li>SNS（X、YouTube等）での情報交換や紹介</li>
+        </ul>
+        <p>※共有の際、当サイト名やURLを併記していただけると大変励みになります。</p>
+
+        <h2>6. 規約の変更</h2>
+        <p>事前通知なしに本規約を変更することがあります。最新の規約をご確認の上、ご利用ください。</p>
+    </main>
+</div>
+
+<footer>
+    <div class="footer-nav">
+        <a href="index.html">ホーム</a>
+        <a href="simulator.html">シミュレーター</a>
+        <a href="search.html">特能図鑑</a>
+        <a href="terms.html">利用規約</a>
+        <a href="https://x.com/priskin_pawa" target="_blank">X (旧Twitter)</a>
+    </div>
+    <p class="copyright">
+        &copy; 2026 プリスキンのパワアド育成ナビ<br>
+        当サイトは個人によるファンサイトであり、公式とは関係ありません。
+    </p>
+</footer>
+
+</body>
+</html>

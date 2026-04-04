@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-KFYD72JSBG"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-KFYD72JSBG');
+    </script>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>育成シミュレーター | プリスキンのパワアド育成ナビ</title>
+    <style>
+        :root {
+            --story-bg: #4a2f1a;
+            --story-paper: #e9d5b5;
+            --story-panel: #7c5535;
+            --story-border: #9e7a5c;
+            --story-accent: #d35400;
+            --story-text: #3e2714;
+            --story-text-light: #f4ece0;
+            --nav-height: 60px;
+        }
+
+        body {
+            font-family: 'Hiragino Kaku Gothic ProN', 'Hiragino Sans', Meiryo, serif;
+            margin: 0; padding: 0;
+            background-color: var(--story-bg);
+            background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADIAAAAyCAMAAAAp4BCFAAAABGdBTUEAALGPC/xhBQAAAAFzUkdCAK7OHOkAAAAzUExURf///8DAwL+/v76+vr29vby8vLu7u7m5ubm5ubm5ubm5ubm5ubm5ubm5ubm5ubm5ubm5ucp7H40AAAAQdFJOUwAgMEBQYHCAgI+fmKCgoMCwS645uAAAARRJREFUOMuVlVuWwyAMRAtIGOf+V22S45K8S9NfWp445SNoAt4H6I8f/wP0Zf8A/bHjL4B+0T8A/Xz9F0Df6B+AftY/AP14/Rdgf9A/oF9b/wXon8ZfAP4M+XNk49L4XwD+DPlzZOPS+FsAfgz5c2Tj0vgXIBuXxn8BsnFp/BcAW79uXBr/AsTWX7f9K4CtXzcu5V+AbFwa/wXA1q8bl8p/AbLx68al/AsAW79unMpfALb+2u1PAbLxK7Y7BcjGr9juFCAbt2K7XwCx9etWbE8Btv7alXcB2vYvX94CaNu/fPkXoG375etXgL7Y7BcgW//15U8AsvVfV94FyNafX3kXQNv6S9f/AVp55SND5bU6AAAAAElFTkSuQmCC');
+            color: var(--story-text-light);
+            line-height: 1.2;
+        }
+
+        /* ===== 共通ナビゲーション ===== */
+        .topnav {
+            display: flex; justify-content: flex-start; align-items: center;
+            background: #2c1a0c; color: #fff; height: var(--nav-height); padding: 0 10px;
+            position: sticky; top: 0; z-index: 1000; border-bottom: 3px solid var(--story-accent);
+        }
+        .nav-links { display: flex; overflow-x: auto; white-space: nowrap; gap: 5px; width: 100%; }
+        .nav-links::-webkit-scrollbar { display: none; }
+        .nav-links a { color: #fff; text-decoration: none; padding: 8px 12px; font-size: 0.9rem; font-weight: bold; border-radius: 4px; }
+        .nav-links a.current { background: var(--story-accent); }
+
+        /* ===== 経験点バナー ===== */
+        .exp-banner {
+            background-color: #3e2714;
+            background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADIAAAAyCAMAAAAp4BCFAAAABGdBTUEAALGPC/xhBQAAAAFzUkdCAK7OHOkAAAAzUExURf///8DAwL+/v76+vr29vby8vLu7u7m5ubm5ubm5ubm5ubm5ubm5ubm5ubm5ubm5ubm5ucp7H40AAAAQdFJOUwAgMEBQYHCAgI+fmKCgoMCwS645uAAAARRJREFUOMuVlVuWwyAMRAtIGOf+V22S45K8S9NfWp445SNoAt4H6I8f/wP0Zf8A/bHjL4B+0T8A/Xz9F0Df6B+AftY/AP14/Rdgf9A/oF9b/wXon8ZfAP4M+XNk49L4XwD+DPlzZOPS+FsAfgz5c2Tj0vgXIBuXxn8BsnFp/BcAW79uXBr/AsTWX7f9K4CtXzcu5V+AbFwa/wXA1q8bl8p/AbLx68al/AsAW79unMpfALb+2u1PAbLxK7Y7BcjGr9juFCAbt2K7XwCx9etWbE8Btv7alXcB2vYvX94CaNu/fPkXoG375etXgL7Y7BcgW//15U8AsvVfV94FyNafX3kXQNv6S9f/AVp55SND5bU6AAAAAElFTkSuQmCC');
+            padding: 10px 5px; text-align: center;
+            position: sticky; top: var(--nav-height); z-index: 999;
+            border-bottom: 2px solid var(--story-border);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+        }
+        .exp-banner-title { font-size: 0.75rem; font-weight: bold; color: var(--story-paper); margin-bottom: 5px; letter-spacing: 0.1em;}
+        .exp-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 4px; max-width: 600px; margin: 0 auto; }
+        .exp-grid div { background: rgba(0,0,0,0.3); border: 1px solid var(--story-border); padding: 4px 0; border-radius: 4px; font-size: 0.65rem; color: #a18a78; }
+        .exp-grid span { display: block; font-size: 0.9rem; color: var(--story-paper); font-weight: 900; }
+
+        #app { max-width: 800px; margin: 0 auto; padding: 10px; box-sizing: border-box; }
+        
+        .card { background: var(--story-panel); border-radius: 8px; padding: 12px; margin-bottom: 12px; border: 2px solid var(--story-border); box-shadow: 3px 3px 0px rgba(0,0,0,0.2); color: var(--story-paper); }
+        .card-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; padding-bottom: 5px; border-bottom: 1px solid var(--story-border);}
+        h2 { font-size: 0.9rem; margin: 0; color: var(--story-paper); font-weight: bold; text-shadow: 1px 1px 0 rgba(0,0,0,0.3);}
+
+        .stat-grid-6col { display: grid; grid-template-columns: repeat(6, 1fr); gap: 4px; }
+        .stat-unit { background: rgba(0, 0, 0, 0.15); border: 1px solid var(--story-border); padding: 6px 2px; display: flex; flex-direction: column; align-items: center; border-radius: 4px; }
+        .stat-name-label { font-size: 0.65rem; font-weight: bold; color: var(--story-paper); margin-bottom: 4px; }
+        .num-input { width: 90%; border: 1px solid #c9ad88; border-radius: 2px; text-align: center; font-size: 1rem; font-weight: 900; background: var(--story-paper); color: var(--story-text); padding: 2px 0; outline: none; }
+        .target-ctrl { width: 100%; display: flex; flex-direction: column; gap: 2px; margin: 4px 0; }
+        .btn-step { width: 100%; border: none; background: #604028; color: var(--story-paper); font-size: 0.75rem; font-weight: bold; padding: 2px 0; cursor: pointer; border-radius: 2px; }
+        .rank-box { font-size: 0.85rem; font-weight: 900; color: var(--story-paper); background: rgba(0,0,0,0.3); padding: 2px 6px; border-radius: 4px; margin: 2px 0; }
+        .diff-text { font-size: 0.6rem; color: #c9ad88; font-weight: bold; }
+        .kotsu-check { display: flex; align-items: center; justify-content: center; gap: 2px; margin-top: 5px; background: rgba(255, 255, 255, 0.05); padding: 3px; border-radius: 2px; cursor: pointer; }
+        .kotsu-check span { font-size: 0.6rem; color: var(--story-paper); font-weight: bold; }
+
+        .btn-reset-all { font-size: 0.6rem; background: var(--story-accent); color: white; border: none; padding: 4px 10px; border-radius: 4px; cursor: pointer; font-weight: bold; }
+        .btn-reset-single { background: rgba(0,0,0,0.2); color: #c9ad88; border: 1px solid var(--story-border); font-size: 0.5rem; margin-top: 4px; padding: 2px 0; width: 100%; cursor: pointer; }
+
+        .search-input-main { width: 100%; padding: 12px; border: 1px solid #c9ad88; border-radius: 4px; font-size: 0.9rem; background: var(--story-paper); color: var(--story-text); box-sizing: border-box; outline: none; }
+        .sim-filters { display: grid; grid-template-columns: repeat(3, 1fr); gap: 5px; margin-top: 10px; }
+        .sim-filters select { background: #604028; color: var(--story-paper); border: 1px solid var(--story-border); font-size: 0.7rem; padding: 8px; border-radius: 4px; }
+
+        /* ===== 共通フッター ===== */
+        footer { text-align: center; padding: 40px 15px; background: #2c1a0c; color: #888; margin-top: 20px; font-size: 0.75rem; border-top: 2px solid var(--story-border); }
+        .footer-nav { display: flex; flex-wrap: wrap; justify-content: center; gap: 15px; font-size: 0.85rem; margin-bottom: 20px; }
+        .footer-nav a { color: #fff; text-decoration: none; opacity: 0.7; }
+        .copyright { font-size: 0.75rem; color: #666; }
+    </style>
+</head>
+<body>
+
+<header class="topnav">
+    <nav class="nav-links">
+        <a href="index.html">ホーム</a>
+        <a href="simulator.html" class="current">シミュレーター</a>
+        <a href="search.html">特能図鑑</a>
+    </nav>
+</header>
+
+<div class="exp-banner">
+    <div class="exp-banner-title">◆ 必要経験点 合計 ◆</div>
+    <div class="exp-grid">
+        <div>筋力<span id="total-muscle">0</span></div>
+        <div>敏捷<span id="total-agile">0</span></div>
+        <div>技術<span id="total-tech">0</span></div>
+        <div>知力<span id="total-intel">0</span></div>
+        <div>精神<span id="total-mental">0</span></div>
+    </div>
+</div>
+
+<div id="app">
+    <main>
+        <section class="card">
+            <div class="card-header">
+                <h2>現在の能力値</h2>
+                <button class="btn-reset-all" onclick="resetAllStarts()">全リセット</button>
+            </div>
+            <div class="stat-grid-6col" id="start-stats-container"></div>
+        </section>
+
+        <section class="card">
+            <div class="card-header">
+                <h2>目標値 ・ コツ設定</h2>
+                <button class="btn-reset-all" onclick="resetAllTargets()">全リセット</button>
+            </div>
+            <div class="stat-grid-6col" id="target-stats-container"></div>
+        </section>
+
+        <section class="card">
+            <div class="card-header">
+                <h2>修得予定の特殊能力</h2>
+                <button class="btn-reset-all" onclick="resetAbilities()">全削除</button>
+            </div>
+            <div id="selected-list"></div>
+        </section>
+
+        <section class="card">
+            <h2 style="margin-bottom: 10px;">特殊能力を検索して追加</h2>
+            <input type="text" id="search-input" class="search-input-main" placeholder="能力名で検索..." oninput="searchInSim()">
+            <div class="sim-filters">
+                <select id="fCat" onchange="searchInSim()">
+                    <option value="">全カテゴリ</option>
+                    <option value="アクションスキル・青">アクション・青</option>
+                    <option value="アクションスキル・金">アクション・金</option>
+                    <option value="特殊能力・青">特能・青</option>
+                    <option value="特殊能力・青赤">特能・青赤</option>
+                    <option value="特殊能力・金">特能・金</option>
+                    <option value="必殺技・虹">必殺・虹</option>
+                </select>
+                <select id="fAttr" onchange="searchInSim()">
+                    <option value="">全属性</option>
+                    <option value="火属性">火属性</option>
+                    <option value="風属性">風属性</option>
+                    <option value="水属性">水属性</option>
+                </select>
+                <select id="fJob" onchange="searchInSim()">
+                    <option value="">全ジョブ</option>
+                    <option value="剣士">剣士</option>
+                    <option value="弓使い">弓使い</option>
+                    <option value="魔法使い">魔法使い</option>
+                    <option value="魔道士">魔道士</option>
+                </select>
+            </div>
+            <div id="search-results" style="margin-top:10px; max-height:180px; overflow-y:auto; border-top:1px solid var(--story-border);"></div>
+        </section>
+    </main>
+</div>
+
+<footer>
+    <div class="footer-nav">
+        <a href="index.html">ホーム</a>
+        <a href="simulator.html">シミュレーター</a>
+        <a href="search.html">特能図鑑</a>
+        <a href="terms.html">利用規約</a>
+        <a href="https://x.com/priskin_pawa" target="_blank">X (旧Twitter)</a>
+    </div>
+    <p class="copyright">
+        &copy; 2026 プリスキンのパワアド育成ナビ<br>
+        当サイトは個人によるファンサイトであり、公式とは関係ありません。
+    </p>
+</footer>
+
+<script src="support-skills.js"></script>
+<script src="action-skills.js"></script>
+<script src="hissatsu-skills.js"></script>
+<script>
+    const SPECIAL_ABILITIES = [
+        ...(typeof SUPPORT_SKILLS !== 'undefined' ? SUPPORT_SKILLS : []),
+        ...(typeof ACTION_SKILLS !== 'undefined' ? ACTION_SKILLS : []),
+        ...(typeof HISSATSU_SKILLS !== 'undefined' ? HISSATSU_SKILLS : [])
+    ];
+</script>
+<script src="script.js"></script>
+</body>
+</html>
