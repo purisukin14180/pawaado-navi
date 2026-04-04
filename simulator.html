@@ -33,7 +33,7 @@
             line-height: 1.2;
         }
 
-        /* ===== 共通ナビゲーション ===== */
+        /* ===== ナビゲーション ===== */
         .topnav {
             display: flex; justify-content: flex-start; align-items: center;
             background: #2c1a0c; color: #fff; height: var(--nav-height); padding: 0 10px;
@@ -82,7 +82,6 @@
         .sim-filters { display: grid; grid-template-columns: repeat(3, 1fr); gap: 5px; margin-top: 10px; }
         .sim-filters select { background: #604028; color: var(--story-paper); border: 1px solid var(--story-border); font-size: 0.7rem; padding: 8px; border-radius: 4px; }
 
-        /* ===== 共通フッター ===== */
         footer { text-align: center; padding: 40px 15px; background: #2c1a0c; color: #888; margin-top: 20px; font-size: 0.75rem; border-top: 2px solid var(--story-border); }
         .footer-nav { display: flex; flex-wrap: wrap; justify-content: center; gap: 15px; font-size: 0.85rem; margin-bottom: 20px; }
         .footer-nav a { color: #fff; text-decoration: none; opacity: 0.7; }
@@ -130,23 +129,23 @@
 
         <section class="card">
             <div class="card-header">
-                <h2>修得予定の特殊能力</h2>
+                <h2>修得予定のスキル</h2>
                 <button class="btn-reset-all" onclick="resetAbilities()">全削除</button>
             </div>
             <div id="selected-list"></div>
         </section>
 
         <section class="card">
-            <h2 style="margin-bottom: 10px;">特殊能力を検索して追加</h2>
+            <h2 style="margin-bottom: 10px;">スキルを検索して追加</h2>
             <input type="text" id="search-input" class="search-input-main" placeholder="能力名で検索..." oninput="searchInSim()">
             <div class="sim-filters">
                 <select id="fCat" onchange="searchInSim()">
                     <option value="">全カテゴリ</option>
                     <option value="アクションスキル・青">アクション・青</option>
                     <option value="アクションスキル・金">アクション・金</option>
-                    <option value="特殊能力・青">特能・青</option>
-                    <option value="特殊能力・青赤">特能・青赤</option>
-                    <option value="特殊能力・金">特能・金</option>
+                    <option value="サポートスキル・青">サポート・青</option>
+                    <option value="サポートスキル・青赤">サポート・青赤</option>
+                    <option value="サポートスキル・金">サポート・金</option>
                     <option value="必殺技・虹">必殺・虹</option>
                 </select>
                 <select id="fAttr" onchange="searchInSim()">

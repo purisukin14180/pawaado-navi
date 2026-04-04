@@ -38,7 +38,6 @@
             color: var(--story-text-light); line-height: 1.6;
         }
 
-        /* ===== 共通ナビゲーション ===== */
         .topnav {
             display: flex; justify-content: flex-start; align-items: center;
             background: #2c1a0c; color: #fff; height: var(--nav-height); padding: 0 10px;
@@ -51,7 +50,6 @@
 
         .container { display: flex; max-width: 1400px; margin: 0 auto; min-height: calc(100vh - 120px); }
 
-        /* サイドバー */
         .sidebar { 
             width: 300px; background: var(--story-panel); padding: 20px; border-right: 2px solid var(--story-border); 
             height: calc(100vh - 60px); position: sticky; top: 60px; box-sizing: border-box; overflow-y: auto;
@@ -68,7 +66,6 @@
         .main { flex: 1; padding: 20px; }
         .main h1 { font-size: 1.4rem; margin: 0 0 20px; color: var(--story-paper); text-shadow: 2px 2px 0 rgba(0,0,0,0.5); }
 
-        /* 特能カード */
         .ability-card { 
             background: var(--story-paper); border-radius: 4px; padding: 16px; margin-bottom: 15px; 
             box-shadow: 4px 4px 0px rgba(0,0,0,0.2); border: 1px solid #c9ad88; border-left-width: 10px;
@@ -76,10 +73,8 @@
         }
         
         .cat-hissatsu { border-left: 10px solid; border-image: var(--color-hissatsu) 1; }
-
         .card-top { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 10px; }
         .ability-title { font-size: 1.1rem; font-weight: 800; color: var(--story-text); }
-        
         .cat-badge { font-size: 0.65rem; font-weight: 900; color: #fff; padding: 3px 10px; border-radius: 4px; box-shadow: 1px 1px 2px rgba(0,0,0,0.2); }
 
         .cost-grid { 
@@ -94,7 +89,6 @@
         .effect-box { padding: 12px; background: #dfccaf; border: 1px solid #c9ad88; border-radius: 4px; font-size: 0.85rem; font-weight: bold; color: var(--story-text); }
         .condition-text { font-size: 0.75rem; color: #7c5535; margin-top: 8px; display: block; font-weight: bold; }
 
-        /* ===== 共通フッター ===== */
         footer { text-align: center; padding: 40px 15px; background: #2c1a0c; color: #888; margin-top: 40px; border-top: 2px solid var(--story-border); }
         .footer-nav { display: flex; flex-wrap: wrap; justify-content: center; gap: 15px; font-size: 0.85rem; margin-bottom: 20px; }
         .footer-nav a { color: #fff; text-decoration: none; opacity: 0.7; }
@@ -118,8 +112,8 @@
 
 <div class="container">
     <div class="sidebar">
-        <h3>特能を絞り込む</h3>
-        <input type="text" id="q" class="search-input" placeholder="名前や効果で検索...">
+        <h3>条件で絞り込む</h3>
+        <input type="text" id="q" class="search-input" placeholder="スキル名や効果で検索...">
 
         <div class="filter-section">
             <div class="filter-title">カテゴリ</div>
@@ -128,9 +122,9 @@
                     <option value="">すべてのカテゴリ</option>
                     <option value="アクションスキル・青">アクションスキル・青</option>
                     <option value="アクションスキル・金">アクションスキル・金</option>
-                    <option value="特殊能力・青">特殊能力・青</option>
-                    <option value="特殊能力・青赤">特殊能力・青赤</option>
-                    <option value="特殊能力・金">特殊能力・金</option>
+                    <option value="サポートスキル・青">サポートスキル・青</option>
+                    <option value="サポートスキル・青赤">サポートスキル・青赤</option>
+                    <option value="サポートスキル・金">サポートスキル・金</option>
                     <option value="必殺技・虹">必殺技・虹</option>
                 </select>
             </div>
@@ -165,7 +159,7 @@
     </div>
 
     <div class="main">
-        <h1>特能データベース</h1>
+        <h1>スキルデータベース</h1>
         <div id="list">記録を読み込み中...</div>
     </div>
 </div>
@@ -202,13 +196,18 @@
     const jobEl = document.getElementById('fJob');
     const countEl = document.getElementById('resCount');
 
+    // 内部データ（.jsファイル）のカテゴリ名を置換・判定するための設定
     const config = {
-        "アクションスキル・青": { color: "var(--color-act-blue)", class: "" },
-        "アクションスキル・金": { color: "var(--color-act-gold)", class: "" },
-        "特殊能力・青": { color: "var(--color-spec-blue)", class: "" },
-        "特殊能力・青赤": { color: "var(--color-spec-red)", class: "" },
-        "特殊能力・金": { color: "var(--color-spec-gold)", class: "" },
-        "必殺技・虹": { color: "var(--color-hissatsu)", class: "cat-hissatsu" }
+        "アクションスキル・青": { color: "var(--color-act-blue)", label: "アクション・青" },
+        "アクションスキル・金": { color: "var(--color-act-gold)", label: "アクション・金" },
+        "サポートスキル・青": { color: "var(--color-spec-blue)", label: "サポート・青" },
+        "サポートスキル・青赤": { color: "var(--color-spec-red)", label: "サポート・青赤" },
+        "サポートスキル・金": { color: "var(--color-spec-gold)", label: "サポート・金" },
+        "必殺技・虹": { color: "var(--color-hissatsu)", label: "必殺技・虹", class: "cat-hissatsu" },
+        // 旧名称の互換用
+        "特殊能力・青": { color: "var(--color-spec-blue)", label: "サポート・青" },
+        "特殊能力・青赤": { color: "var(--color-spec-red)", label: "サポート・青赤" },
+        "特殊能力・金": { color: "var(--color-spec-gold)", label: "サポート・金" }
     };
 
     function render() {
@@ -220,7 +219,12 @@
         const filtered = SPECIAL_ABILITIES.filter(d => {
             const searchTarget = `${d.name} ${d.effect} ${d.condition}`.toLowerCase();
             const matchQ = !query || searchTarget.includes(query);
-            const matchCat = !category || d.category === category;
+            
+            // カテゴリ判定（特殊能力をサポートスキルとして読み替える）
+            let dCat = d.category;
+            if (dCat.includes("特殊能力")) dCat = dCat.replace("特殊能力", "サポートスキル");
+            const matchCat = !category || dCat === category;
+
             const matchAttr = !attribute || (d.condition && d.condition.includes(attribute));
             const matchJob = !job || (d.condition && d.condition.includes(job));
             return matchQ && matchCat && matchAttr && matchJob;
@@ -229,22 +233,25 @@
         countEl.textContent = `${filtered.length} 件の記録が見つかりました`;
         
         if (filtered.length === 0) {
-            listEl.innerHTML = '<p style="text-align:center; padding:40px; color:var(--story-paper); font-weight:bold;">一致する能力は見つかりませんでした</p>';
+            listEl.innerHTML = '<p style="text-align:center; padding:40px; color:var(--story-paper); font-weight:bold;">一致するスキルは見つかりませんでした</p>';
             return;
         }
 
         listEl.innerHTML = filtered.map(d => {
-            const style = config[d.category] || { color: "#8a6d55", class: "" };
+            let dCat = d.category;
+            if (dCat.includes("特殊能力")) dCat = dCat.replace("特殊能力", "サポートスキル");
+            
+            const style = config[dCat] || { color: "#8a6d55", label: dCat };
             let badgeBg = style.color;
-            if (d.category === "必殺技・虹") {
+            if (dCat === "必殺技・虹") {
                 badgeBg = "linear-gradient(45deg, #d35400, #f1c40f, #e67e22)";
             }
             
             return `
-                <div class="ability-card ${style.class}" style="border-left-color: ${style.color}">
+                <div class="ability-card ${style.class || ''}" style="border-left-color: ${style.color}">
                     <div class="card-top">
                         <div class="ability-title">${d.name}</div>
-                        <div class="cat-badge" style="background:${badgeBg}">${d.category}</div>
+                        <div class="cat-badge" style="background:${badgeBg}">${style.label}</div>
                     </div>
                     <div class="cost-grid">
                         <div class="cost-item"><span class="cost-label">筋力</span><span class="cost-val">${d.costs.muscle}</span></div>
