@@ -22,6 +22,7 @@
             --story-text: #3e2714;
             --story-text-light: #f4ece0;
             --nav-height: 60px;
+            /* 経験点カラー */
             --color-muscle: #ff4d4d; --color-agile: #4da6ff; --color-tech: #ff9933; --color-intel: #cc99ff; --color-mental: #99ff66;
         }
 
@@ -36,22 +37,26 @@
             touch-action: manipulation;
         }
 
+        /* ===== 上部ナビゲーション ===== */
         .topnav { display: flex; justify-content: flex-start; align-items: center; background: #2c1a0c; height: var(--nav-height); padding: 0 10px; position: sticky; top: 0; z-index: 1000; border-bottom: 3px solid var(--story-accent); }
         .nav-links a { color: #fff; text-decoration: none; padding: 8px 12px; font-size: 0.9rem; font-weight: bold; border-radius: 4px; }
         .nav-links a.current { background: var(--story-accent); }
 
-        .exp-banner { background-color: #3e2714; padding: 10px 5px; text-align: center; position: sticky; top: var(--nav-height); z-index: 999; border-bottom: 2px solid var(--story-border); }
+        /* ===== 経験点バナー ===== */
+        .exp-banner { background-color: #3e2714; padding: 10px 5px; text-align: center; position: sticky; top: var(--nav-height); z-index: 999; border-bottom: 2px solid var(--story-border); box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3); }
+        .exp-banner-title { font-size: 0.75rem; font-weight: bold; color: var(--story-paper); margin-bottom: 5px; letter-spacing: 0.1em;}
         .exp-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 4px; max-width: 600px; margin: 0 auto; }
-        .exp-grid div { background: rgba(0,0,0,0.4); border: 1px solid var(--story-border); padding: 4px 0; border-radius: 4px; font-size: 0.65rem; font-weight: bold; }
+        .exp-grid div { background: rgba(0,0,0,0.4); border: 1px solid var(--story-border); padding: 4px 0; border-radius: 4px; font-size: 0.65rem; font-weight: bold; text-shadow: 1px 1px 2px rgba(0,0,0,0.8); }
         .exp-muscle { color: var(--color-muscle); } .exp-agile { color: var(--color-agile); } .exp-tech { color: var(--color-tech); } .exp-intel { color: var(--color-intel); } .exp-mental { color: var(--color-mental); }
         .exp-grid span { display: block; font-size: 0.95rem; font-weight: 900; margin-top: 2px; }
 
         #app { max-width: 800px; margin: 0 auto; padding: 10px; box-sizing: border-box; }
+        
         .card { background: var(--story-panel); border-radius: 8px; padding: 12px; margin-bottom: 12px; border: 2px solid var(--story-border); box-shadow: 3px 3px 0px rgba(0,0,0,0.2); color: var(--story-paper); }
         .card-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; padding-bottom: 5px; border-bottom: 1px solid var(--story-border);}
-        h2 { font-size: 0.9rem; margin: 0; color: var(--story-paper); font-weight: bold; }
+        h2 { font-size: 0.9rem; margin: 0; font-weight: bold; text-shadow: 1px 1px 0 rgba(0,0,0,0.3);}
 
-        /* ステータスグリッド（1行6列を維持） */
+        /* ステータスグリッド (6列レイアウト復元) */
         .stat-grid-6col { display: grid; grid-template-columns: repeat(6, 1fr); gap: 4px; }
         .stat-unit { background: rgba(0, 0, 0, 0.15); border: 1px solid var(--story-border); padding: 6px 2px; display: flex; flex-direction: column; align-items: center; border-radius: 4px; }
         .stat-name-label { font-size: 0.65rem; font-weight: bold; color: var(--story-paper); margin-bottom: 4px; }
@@ -60,15 +65,19 @@
         .target-ctrl { width: 100%; display: flex; flex-direction: column; gap: 2px; margin: 4px 0; }
         .btn-step { width: 100%; border: none; background: #604028; color: var(--story-paper); font-size: 0.75rem; font-weight: bold; padding: 2px 0; cursor: pointer; border-radius: 2px; touch-action: manipulation; }
         
+        /* ランク表示 */
         .rank-box { font-size: 0.85rem; font-weight: 900; background: rgba(0,0,0,0.3); padding: 2px 6px; border-radius: 4px; margin: 2px 0; text-align: center; min-width: 20px; }
         .rank-G { color: #f4ece0; } .rank-F { color: #4da6ff; } .rank-E { color: #2ecc71; } .rank-D { color: #e67e22; } .rank-C { color: #f1c40f; } .rank-B { color: #e74c3c; } .rank-A { color: #ff00ff; } .rank-S { color: #ffd700; text-shadow: 0 0 5px gold; }
         
-        .diff-text { font-size: 0.6rem; color: #c9ad88; font-weight: bold; }
+        .diff-text { font-size: 0.6rem; color: #ffd700; font-weight: bold; }
         .kotsu-check { display: flex; align-items: center; justify-content: center; gap: 2px; margin-top: 5px; background: rgba(255, 255, 255, 0.05); padding: 3px; border-radius: 2px; cursor: pointer; }
         .kotsu-check span { font-size: 0.6rem; color: var(--story-paper); font-weight: bold; }
         .btn-reset-single { background: rgba(0,0,0,0.2); color: #c9ad88; border: 1px solid var(--story-border); font-size: 0.5rem; margin-top: 4px; padding: 2px 0; width: 100%; cursor: pointer; border-radius: 2px; }
 
-        /* スキルリスト */
+        /* 共有ボタン */
+        .btn-share { background: var(--story-accent); color: #fff; border: 2px solid #e67e22; padding: 12px; border-radius: 6px; font-weight: bold; width: 100%; cursor: pointer; margin-bottom: 12px; }
+
+        /* スキルリストデザイン */
         .skill-container { background: rgba(0,0,0,0.2); border: 1px solid var(--story-border); border-radius: 4px; margin-bottom: 6px; overflow: hidden; }
         .skill-summary { padding: 10px; display: flex; flex-direction: column; gap: 6px; cursor: pointer; }
         .summary-top { display: flex; justify-content: space-between; align-items: center; }
@@ -76,11 +85,17 @@
         .toggle-icon { font-size: 0.5rem; transition: 0.2s; color: var(--story-accent); }
         .inline-costs { display: flex; flex-wrap: wrap; gap: 4px; }
         .cost-tag { font-size: 0.6rem; padding: 1px 4px; border-radius: 3px; font-weight: bold; background: rgba(0,0,0,0.3); }
-
         .skill-detail { padding: 10px; background: rgba(0,0,0,0.3); border-top: 1px dashed var(--story-border); font-size: 0.75rem; }
-        .btn-share { background: var(--story-accent); color: #fff; border: 2px solid #e67e22; padding: 12px; border-radius: 6px; font-weight: bold; width: 100%; cursor: pointer; margin-bottom: 12px; }
+        .c-m { color: var(--color-muscle); } .c-g { color: var(--color-agile); } .c-t { color: var(--color-tech); } .c-i { color: var(--color-intel); } .c-me { color: var(--color-mental); }
+
         .search-input-main { width: 100%; padding: 12px; border: 1px solid #c9ad88; border-radius: 4px; background: var(--story-paper); color: var(--story-text); box-sizing: border-box; }
-        
+
+        /* ===== 下部ナビゲーション (復活) ===== */
+        footer { text-align: center; padding: 40px 15px; background: #2c1a0c; color: #888; margin-top: 20px; font-size: 0.75rem; border-top: 2px solid var(--story-border); }
+        .footer-nav { display: flex; flex-wrap: wrap; justify-content: center; gap: 15px; font-size: 0.85rem; margin-bottom: 20px; }
+        .footer-nav a { color: #fff; text-decoration: none; opacity: 0.7; }
+        .copyright { font-size: 0.75rem; color: #666; }
+
         @media (max-width: 600px) {
             .stat-grid-6col { gap: 2px; }
             .num-input { font-size: 0.9rem; }
@@ -113,6 +128,41 @@
         <button class="btn-share" onclick="copyShareURL()">🔗 この育成計画を共有する (URLコピー)</button>
 
         <section class="card">
+            <div class="card-header">
+                <h2>教本プリセット反映</h2>
+            </div>
+            <div style="display: flex; flex-direction: column; gap: 10px;">
+                <select id="preset-select" style="background: #604028; color: #fff; border: 1px solid var(--story-border); padding: 10px; border-radius: 4px; font-size: 0.85rem;">
+                    <option value="">教本を選択してください</option>
+                    <optgroup label="剣士">
+                        <option value="ken_1">剣士のススメ／初級</option>
+                        <option value="ken_2">剣士のススメ／中級</option>
+                        <option value="ken_3">剣士のススメ／上級</option>
+                    </optgroup>
+                    <optgroup label="弓使い">
+                        <option value="yumi_1">弓使いのススメ／初級</option>
+                        <option value="yumi_2">弓使いのススメ／中級</option>
+                        <option value="yumi_3">弓使いのススメ／上級</option>
+                    </optgroup>
+                    <optgroup label="魔法使い">
+                        <option value="maho_1">魔法使いのススメ／初級（初級教本）</option>
+                        <option value="maho_2">魔法使いのススメ／中級（中級教本）</option>
+                        <option value="maho_3">魔法使いのススメ／上級（上級教本）</option>
+                    </optgroup>
+                    <optgroup label="魔闘士">
+                        <option value="mato_1">魔闘士のススメ／初級</option>
+                        <option value="mato_2">魔闘士のススメ／中級</option>
+                        <option value="mato_3">魔闘士のススメ／上級</option>
+                    </optgroup>
+                </select>
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px;">
+                    <button onclick="applyPreset('target')" style="background: var(--story-accent); color: white; border: none; padding: 10px; border-radius: 4px; font-weight: bold; font-size: 0.75rem; cursor: pointer;">目標能力に反映</button>
+                    <button onclick="applyPreset('start')" style="background: #8e44ad; color: white; border: none; padding: 10px; border-radius: 4px; font-weight: bold; font-size: 0.75rem; cursor: pointer;">現在能力に反映</button>
+                </div>
+            </div>
+        </section>
+
+        <section class="card">
             <div class="card-header"><h2>現在の能力値</h2><button onclick="resetAllStarts()" style="font-size:0.6rem; background:none; border:1px solid var(--story-border); color:var(--story-paper); padding:2px 5px; border-radius:3px;">全リセ</button></div>
             <div class="stat-grid-6col" id="start-stats-container"></div>
         </section>
@@ -134,6 +184,20 @@
         </section>
     </main>
 </div>
+
+<footer>
+    <div class="footer-nav">
+        <a href="index.html">ホーム</a>
+        <a href="simulator.html">シミュレーター</a>
+        <a href="search.html">特能図鑑</a>
+        <a href="terms.html">利用規約</a>
+        <a href="https://x.com/priskin_pawa" target="_blank">X (旧Twitter)</a>
+    </div>
+    <p class="copyright">
+        &copy; 2026 プリスキンのパワアド育成ナビ<br>
+        当サイトは個人によるファンサイトであり、公式とは関係ありません。
+    </p>
+</footer>
 
 <script src="support-skills.js"></script>
 <script src="action-skills.js"></script>
