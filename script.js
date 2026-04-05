@@ -1,6 +1,5 @@
 /**
- * プリスキンのパワアド育成ナビ - ロジック
- * 教本プリセット反映機能 追加版
+ * プリスキンのパワアド育成ナビ - ロジック完全版
  */
 
 let selectedAbilities = [];
@@ -16,7 +15,6 @@ const STAT_DEFS = [
     { id: 'mental',  name: '精神力', key: 'mental',  max: 75 }
 ];
 
-// 教本データ定義
 const PRESET_DATA = {
     "ken_1": { stats: [18, 27, 4, 18, 18, 13], skills: [] },
     "ken_2": { stats: [36, 45, 4, 36, 31, 27], skills: ["物理攻撃○"] },
@@ -41,37 +39,6 @@ const BASIC_COST_TABLE = {
     mental: [{max:9,muscle:0,agile:0,tech:0,intel:3,mental:7},{max:29,muscle:0,agile:0,tech:0,intel:6,mental:12},{max:39,muscle:0,agile:0,tech:0,intel:9,mental:18},{max:49,muscle:0,agile:0,tech:0,intel:12,mental:24},{max:59,muscle:0,agile:0,tech:0,intel:16,mental:30},{max:69,muscle:0,agile:0,tech:0,intel:19,mental:36},{max:75,muscle:0,agile:0,tech:0,intel:22,mental:42}]
 };
 
-/** プリセット反映 */
-function applyPreset(type) {
-    const key = document.getElementById('preset-select').value;
-    if (!key) { alert("教本を選択してください"); return; }
-    const data = PRESET_DATA[key];
-
-    // 能力値の反映
-    STAT_DEFS.forEach((s, i) => {
-        const inputId = type === 'start' ? `${s.id}-start` : `${s.id}-target-input`;
-        const input = document.getElementById(inputId);
-        if (input) {
-            input.value = data.stats[i];
-            if (type === 'target') updateRankDisplay(s.id, data.stats[i]);
-        }
-    });
-
-    // 目標反映の場合のみ特殊能力も追加
-    if (type === 'target') {
-        data.skills.forEach(skillName => {
-            const skillData = SPECIAL_ABILITIES.find(a => a.name === skillName);
-            if (skillData && !selectedAbilities.find(a => a.name === skillName)) {
-                // コツLv.1 (kotsu: 1) で追加
-                selectedAbilities.push({ ...skillData, kotsu: 1 });
-            }
-        });
-        renderSelected();
-    }
-
-    calculateTotal();
-}
-
 function updateRankDisplay(id, val) {
     const el = document.getElementById(`${id}-rank-display`);
     if (!el) return;
@@ -82,6 +49,52 @@ function updateRankDisplay(id, val) {
     el.innerText = r; el.className = `rank-box rank-${r}`;
 }
 
+function searchInSim() {
+    const q = document.getElementById('search-input').value.toLowerCase();
+    const fCat = document.getElementById('fCat').value;
+    const fAttr = document.getElementById('fAttr').value;
+    const fJob = document.getElementById('fJob').value;
+    const fTarget = document.getElementById('fTarget').value;
+    const area = document.getElementById('search-results');
+    area.innerHTML = '';
+    
+    const filtered = SPECIAL_ABILITIES.filter(a => {
+        const matchQ = !q || a.name.toLowerCase().includes(q);
+        const matchC = !fCat || a.category === fCat;
+        const matchA = !fAttr || (a.condition && a.condition.includes(fAttr));
+        const matchJ = !fJob || (a.condition && a.condition.includes(fJob));
+        const matchT = !fTarget || (a.name.includes(fTarget) || a.effect.includes(fTarget));
+        return matchQ && matchC && matchA && matchJ && matchT;
+    });
+
+    filtered.forEach((a, i) => {
+        const div = document.createElement('div');
+        div.className = 'skill-container';
+        div.innerHTML = `
+            <div class="skill-summary" onclick="toggleDetail('search', ${i})">
+                <div class="summary-top">
+                    <div class="skill-name-area"><span class="toggle-icon" id="search-icon-${i}">▶</span>${a.name}</div>
+                    <button style="background:var(--story-accent); color:#fff; border:none; padding:4px 10px; border-radius:4px; font-weight:bold; font-size:0.75rem; cursor:pointer;" 
+                            onclick="event.stopPropagation(); addAbility('${a.name}')">追加</button>
+                </div>
+                <div class="inline-costs">${getCostTags(a.costs)}</div>
+            </div>
+            <div class="skill-detail" id="search-detail-${i}" style="display:none;">
+                <p>効果: ${a.effect}</p><p>条件: ${a.condition}</p>
+            </div>`;
+        area.appendChild(div);
+    });
+}
+
+function addAbility(name, kotsu = 0) {
+    const data = SPECIAL_ABILITIES.find(a => a.name === name);
+    if (!data) return;
+    if (data.prerequisite) addAbility(data.prerequisite, kotsu);
+    if (selectedAbilities.find(a => a.name === name)) return;
+    selectedAbilities.push({ ...data, kotsu: kotsu });
+    renderSelected(); calculateTotal();
+}
+
 function init() {
     const sCon = document.getElementById('start-stats-container');
     const tCon = document.getElementById('target-stats-container');
@@ -89,7 +102,6 @@ function init() {
         const sDiv = document.createElement('div'); sDiv.className = 'stat-unit';
         sDiv.innerHTML = `<div class="stat-name-label">${stat.name.substring(0,1)}</div><div class="target-ctrl"><button class="btn-step" onmousedown="startHold('${stat.id}', 1, 'start')" ontouchstart="startHold('${stat.id}', 1, 'start')">▲</button><input type="number" class="num-input" id="${stat.id}-start" value="1" oninput="manualInput('${stat.id}', 'start')"><button class="btn-step" onmousedown="startHold('${stat.id}', -1, 'start')" ontouchstart="startHold('${stat.id}', -1, 'start')">▼</button></div>`;
         sCon.appendChild(sDiv);
-
         const tDiv = document.createElement('div'); tDiv.className = 'stat-unit';
         tDiv.innerHTML = `<div class="stat-name-label">${stat.name.substring(0,1)}<span class="diff-text" id="${stat.id}-diff">+0</span></div><div class="target-ctrl"><button class="btn-step" onmousedown="startHold('${stat.id}', 1, 'target')" ontouchstart="startHold('${stat.id}', 1, 'target')">▲</button><input type="number" class="num-input" id="${stat.id}-target-input" value="1" oninput="manualInput('${stat.id}', 'target')"><button class="btn-step" onmousedown="startHold('${stat.id}', -1, 'target')" ontouchstart="startHold('${stat.id}', -1, 'target')">▼</button></div><div id="${stat.id}-rank-display" class="rank-box rank-G">G</div><label class="kotsu-check"><input type="checkbox" id="${stat.id}-kotsu" onchange="calculateTotal()"><span>コツ</span></label><button class="btn-reset-single" onclick="resetSingleTarget('${stat.id}')">リセット</button>`;
         tCon.appendChild(tDiv);
@@ -158,37 +170,36 @@ function renderSelected() {
     const kDisc = [0, 0.5, 0.6, 0.7, 0.8, 0.9];
     area.innerHTML = selectedAbilities.map((a, i) => {
         const r = 1 - kDisc[a.kotsu || 0];
-        return `<div class="skill-container"><div class="skill-summary" onclick="toggleDetail('sel', ${i})"><div class="summary-top"><div class="skill-name-area"><span class="toggle-icon" id="sel-icon-${i}">▶</span>${a.name}</div><div class="skill-right" onclick="event.stopPropagation()"><select onchange="updateKotsu(${i}, this.value)">${[0,1,2,3,4,5].map(v => `<option value="${v}" ${a.kotsu==v?'selected':''}>L${v||'無'}</option>`).join('')}</select><button onclick="removeAbility('${a.name}')" style="color:#ff6b6b; border:none; background:none; font-size:1.2rem;">×</button></div></div><div class="inline-costs">${getCostTags(a.costs, r)}</div></div><div class="skill-detail" id="sel-detail-${i}" style="display:none;"><p>効果: ${a.effect}</p><p>条件: ${a.condition || 'なし'}</p></div></div>`;
+        return `<div class="skill-container"><div class="skill-summary" onclick="toggleDetail('sel', ${i})"><div class="summary-top"><div class="skill-name-area"><span class="toggle-icon" id="sel-icon-${i}">▶</span>${a.name}</div><div class="skill-right" onclick="event.stopPropagation()"><select onchange="updateKotsu(${i}, this.value)">${[0,1,2,3,4,5].map(v => `<option value="${v}" ${a.kotsu==v?'selected':''}>L${v||'無'}</option>`).join('')}</select><button onclick="removeAbility('${a.name}')" style="color:#ff6b6b; border:none; background:none; font-size:1.2rem; cursor:pointer;">×</button></div></div><div class="inline-costs">${getCostTags(a.costs, r)}</div></div><div class="skill-detail" id="sel-detail-${i}" style="display:none;"><p>効果: ${a.effect}</p><p>条件: ${a.condition}</p></div></div>`;
     }).join('');
-}
-
-function searchInSim() {
-    const q = document.getElementById('search-input').value.toLowerCase();
-    const area = document.getElementById('search-results');
-    area.innerHTML = '';
-    SPECIAL_ABILITIES.filter(a => !q || a.name.toLowerCase().includes(q)).forEach((a, i) => {
-        const div = document.createElement('div'); div.className = 'skill-container';
-        div.innerHTML = `<div class="skill-summary" onclick="toggleDetail('search', ${i})"><div class="summary-top"><div class="skill-name-area"><span class="toggle-icon" id="search-icon-${i}">▶</span>${a.name}</div><button style="background:var(--story-accent); color:#fff; border:none; padding:4px 10px; border-radius:4px; font-weight:bold; font-size:0.75rem;" onclick="event.stopPropagation(); addAbility('${a.name}')">追加</button></div><div class="inline-costs">${getCostTags(a.costs)}</div></div><div class="skill-detail" id="search-detail-${i}" style="display:none;"><p>効果: ${a.effect}</p><p>条件: ${a.condition || 'なし'}</p></div>`;
-        area.appendChild(div);
-    });
 }
 
 function toggleDetail(p, i) {
     const d = document.getElementById(`${p}-detail-${i}`);
     const ic = document.getElementById(`${p}-icon-${i}`);
+    if(!d || !ic) return;
     const isH = d.style.display === 'none';
     d.style.display = isH ? 'block' : 'none';
     ic.style.transform = isH ? 'rotate(90deg)' : 'rotate(0deg)';
 }
-
-function addAbility(n) { const d = SPECIAL_ABILITIES.find(a => a.name === n); if (!d || selectedAbilities.find(a => a.name === n)) return; selectedAbilities.push({ ...d, kotsu: 0 }); renderSelected(); calculateTotal(); }
 function updateKotsu(i, v) { selectedAbilities[i].kotsu = parseInt(v); calculateTotal(); renderSelected(); }
 function removeAbility(n) { selectedAbilities = selectedAbilities.filter(a => a.name !== n); renderSelected(); calculateTotal(); }
+function applyPreset(type) {
+    const key = document.getElementById('preset-select').value;
+    if (!key) return;
+    const data = PRESET_DATA[key];
+    STAT_DEFS.forEach((s, i) => {
+        const input = document.getElementById(type === 'start' ? `${s.id}-start` : `${s.id}-target-input`);
+        input.value = data.stats[i];
+        if (type === 'target') updateRankDisplay(s.id, data.stats[i]);
+    });
+    if (type === 'target') data.skills.forEach(sName => addAbility(sName, 1));
+    calculateTotal();
+}
 function resetSingleTarget(id) { const sVal = document.getElementById(`${id}-start`).value; const tInput = document.getElementById(`${id}-target-input`); tInput.value = sVal; updateRankDisplay(id, sVal); document.getElementById(`${id}-kotsu`).checked = false; calculateTotal(); }
 function resetAllStarts() { STAT_DEFS.forEach(s => document.getElementById(`${s.id}-start`).value = 1); calculateTotal(); }
 function resetAllTargets() { STAT_DEFS.forEach(s => resetSingleTarget(s.id)); }
 function resetAbilities() { selectedAbilities = []; renderSelected(); calculateTotal(); }
-
 function copyShareURL() {
     const p = new URLSearchParams();
     STAT_DEFS.forEach(s => p.set(s.id === 'hp' ? 'hp' : s.id.substring(0, 1), document.getElementById(`${s.id}-target-input`).value));
@@ -196,22 +207,19 @@ function copyShareURL() {
     const url = `${window.location.origin}${window.location.pathname}?${p.toString()}`;
     navigator.clipboard.writeText(url).then(() => alert("URLをコピーしました！"));
 }
-
 function saveData() {
     const data = { starts: STAT_DEFS.reduce((a, s) => ({...a, [s.id]: document.getElementById(`${s.id}-start`).value}), {}), targets: STAT_DEFS.reduce((a, s) => ({...a, [s.id]: document.getElementById(`${s.id}-target-input`).value}), {}), kotsu: STAT_DEFS.reduce((a, s) => ({...a, [s.id]: document.getElementById(`${s.id}-kotsu`).checked}), {}) };
     localStorage.setItem('pawaNaviData', JSON.stringify(data));
 }
-
 function loadData() {
     const params = new URLSearchParams(window.location.search);
     if (params.has('hp') || params.has('p') || params.has('s')) {
         STAT_DEFS.forEach(s => { const v = params.get(s.id === 'hp' ? 'hp' : s.id.substring(0, 1)); if (v) { document.getElementById(`${s.id}-target-input`).value = v; updateRankDisplay(s.id, v); } });
-        const s = params.get('s'); if (s) { selectedAbilities = []; s.split(',').forEach(n => { const d = SPECIAL_ABILITIES.find(a => a.name === decodeURIComponent(n)); if (d) selectedAbilities.push({ ...d, kotsu: 0 }); }); renderSelected(); }
+        const sList = params.get('s'); if (sList) { selectedAbilities = []; sList.split(',').forEach(n => addAbility(decodeURIComponent(n))); }
     } else {
         const saved = JSON.parse(localStorage.getItem('pawaNaviData'));
         if (saved) STAT_DEFS.forEach(s => { document.getElementById(`${s.id}-start`).value = saved.starts[s.id] || 1; document.getElementById(`${s.id}-target-input`).value = saved.targets[s.id] || 1; document.getElementById(`${s.id}-kotsu`).checked = saved.kotsu[s.id] || false; updateRankDisplay(s.id, saved.targets[s.id] || 1); });
     }
     calculateTotal();
 }
-
 window.onload = () => { init(); searchInSim(); };
