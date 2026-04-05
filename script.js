@@ -20,16 +20,16 @@ const STAT_DEFS = [
 const PRESET_DATA = {
     "ken_1": { stats: [18, 27, 4, 18, 18, 13], skills: [] },
     "ken_2": { stats: [36, 45, 4, 36, 31, 27], skills: ["物理攻撃○"] },
-    "ken_3": { stats: [49, 58, 4, 45, 40, 36], skills: ["怪力"] },
+    "ken_3": { stats: [49, 58, 4, 45, 40, 36], skills: ["怪力Lv.1"] },
     "yumi_1": { stats: [13, 27, 4, 27, 9, 18], skills: [] },
     "yumi_2": { stats: [27, 45, 4, 49, 13, 27], skills: ["狙い撃ち"] },
-    "yumi_3": { stats: [40, 58, 4, 63, 18, 36], skills: ["怪力"] },
+    "yumi_3": { stats: [40, 58, 4, 63, 18, 36], skills: ["怪力Lv.1"] },
     "maho_1": { stats: [13, 4, 27, 27, 9, 18], skills: [] },
     "maho_2": { stats: [27, 4, 49, 45, 13, 27], skills: ["魔法攻撃○"] },
-    "maho_3": { stats: [40, 4, 63, 58, 18, 36], skills: ["魔力増強"] },
+    "maho_3": { stats: [40, 4, 63, 58, 18, 36], skills: ["魔力増強Lv.1"] },
     "mato_1": { stats: [18, 4, 27, 18, 13, 18], skills: [] },
     "mato_2": { stats: [36, 4, 45, 36, 27, 31], skills: ["魔力制御"] },
-    "mato_3": { stats: [49, 4, 54, 49, 36, 40], skills: ["魔力増強"] }
+    "mato_3": { stats: [49, 4, 54, 49, 36, 40], skills: ["魔力増強Lv.1"] }
 };
 
 const BASIC_COST_TABLE = {
