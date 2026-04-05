@@ -22,6 +22,7 @@
             --story-text: #3e2714;
             --story-text-light: #f4ece0;
             --nav-height: 60px;
+            --color-muscle: #ff4d4d; --color-agile: #4da6ff; --color-tech: #ff9933; --color-intel: #cc99ff; --color-mental: #99ff66;
         }
 
         body {
@@ -31,61 +32,59 @@
             background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADIAAAAyCAMAAAAp4BCFAAAABGdBTUEAALGPC/xhBQAAAAFzUkdCAK7OHOkAAAAzUExURf///8DAwL+/v76+vr29vby8vLu7u7m5ubm5ubm5ubm5ubm5ubm5ubm5ubm5ubm5ubm5ucp7H40AAAAQdFJOUwAgMEBQYHCAgI+fmKCgoMCwS645uAAAARRJREFUOMuVlVuWwyAMRAtIGOf+V22S45K8S9NfWp445SNoAt4H6I8f/wP0Zf8A/bHjL4B+0T8A/Xz9F0Df6B+AftY/AP14/Rdgf9A/oF9b/wXon8ZfAP4M+XNk49L4XwD+DPlzZOPS+FsAfgz5c2Tj0vgXIBuXxn8BsnFp/BcAW79uXBr/AsTWX7f9K4CtXzcu5V+AbFwa/wXA1q8bl8p/AbLx68al/AsAW79unMpfALb+2u1PAbLxK7Y7BcjGr9juFCAbt2K7XwCx9etWbE8Btv7alXcB2vYvX94CaNu/fPkXoG375etXgL7Y7BcgW//15U8AsvVfV94FyNafX3kXQNv6S9f/AVp55SND5bU6AAAAAElFTkSuQmCC');
             color: var(--story-text-light);
             line-height: 1.2;
+            /* スマホのダブルタップズーム防止 */
+            touch-action: manipulation;
         }
 
-        /* ===== ナビゲーション ===== */
-        .topnav {
-            display: flex; justify-content: flex-start; align-items: center;
-            background: #2c1a0c; color: #fff; height: var(--nav-height); padding: 0 10px;
-            position: sticky; top: 0; z-index: 1000; border-bottom: 3px solid var(--story-accent);
-        }
-        .nav-links { display: flex; overflow-x: auto; white-space: nowrap; gap: 5px; width: 100%; }
-        .nav-links::-webkit-scrollbar { display: none; }
+        .topnav { display: flex; justify-content: flex-start; align-items: center; background: #2c1a0c; height: var(--nav-height); padding: 0 10px; position: sticky; top: 0; z-index: 1000; border-bottom: 3px solid var(--story-accent); }
         .nav-links a { color: #fff; text-decoration: none; padding: 8px 12px; font-size: 0.9rem; font-weight: bold; border-radius: 4px; }
         .nav-links a.current { background: var(--story-accent); }
 
-        /* ===== 経験点バナー ===== */
-        .exp-banner {
-            background-color: #3e2714;
-            background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADIAAAAyCAMAAAAp4BCFAAAABGdBTUEAALGPC/xhBQAAAAFzUkdCAK7OHOkAAAAzUExURf///8DAwL+/v76+vr29vby8vLu7u7m5ubm5ubm5ubm5ubm5ubm5ubm5ubm5ubm5ubm5ucp7H40AAAAQdFJOUwAgMEBQYHCAgI+fmKCgoMCwS645uAAAARRJREFUOMuVlVuWwyAMRAtIGOf+V22S45K8S9NfWp445SNoAt4H6I8f/wP0Zf8A/bHjL4B+0T8A/Xz9F0Df6B+AftY/AP14/Rdgf9A/oF9b/wXon8ZfAP4M+XNk49L4XwD+DPlzZOPS+FsAfgz5c2Tj0vgXIBuXxn8BsnFp/BcAW79uXBr/AsTWX7f9K4CtXzcu5V+AbFwa/wXA1q8bl8p/AbLx68al/AsAW79unMpfALb+2u1PAbLxK7Y7BcjGr9juFCAbt2K7XwCx9etWbE8Btv7alXcB2vYvX94CaNu/fPkXoG375etXgL7Y7BcgW//15U8AsvVfV94FyNafX3kXQNv6S9f/AVp55SND5bU6AAAAAElFTkSuQmCC');
-            padding: 10px 5px; text-align: center;
-            position: sticky; top: var(--nav-height); z-index: 999;
-            border-bottom: 2px solid var(--story-border);
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
-        }
-        .exp-banner-title { font-size: 0.75rem; font-weight: bold; color: var(--story-paper); margin-bottom: 5px; letter-spacing: 0.1em;}
+        .exp-banner { background-color: #3e2714; padding: 10px 5px; text-align: center; position: sticky; top: var(--nav-height); z-index: 999; border-bottom: 2px solid var(--story-border); }
         .exp-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 4px; max-width: 600px; margin: 0 auto; }
-        .exp-grid div { background: rgba(0,0,0,0.3); border: 1px solid var(--story-border); padding: 4px 0; border-radius: 4px; font-size: 0.65rem; color: #a18a78; }
-        .exp-grid span { display: block; font-size: 0.9rem; color: var(--story-paper); font-weight: 900; }
+        .exp-grid div { background: rgba(0,0,0,0.4); border: 1px solid var(--story-border); padding: 4px 0; border-radius: 4px; font-size: 0.65rem; font-weight: bold; }
+        .exp-muscle { color: var(--color-muscle); } .exp-agile { color: var(--color-agile); } .exp-tech { color: var(--color-tech); } .exp-intel { color: var(--color-intel); } .exp-mental { color: var(--color-mental); }
+        .exp-grid span { display: block; font-size: 0.95rem; font-weight: 900; margin-top: 2px; }
 
         #app { max-width: 800px; margin: 0 auto; padding: 10px; box-sizing: border-box; }
-        
         .card { background: var(--story-panel); border-radius: 8px; padding: 12px; margin-bottom: 12px; border: 2px solid var(--story-border); box-shadow: 3px 3px 0px rgba(0,0,0,0.2); color: var(--story-paper); }
         .card-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; padding-bottom: 5px; border-bottom: 1px solid var(--story-border);}
-        h2 { font-size: 0.9rem; margin: 0; color: var(--story-paper); font-weight: bold; text-shadow: 1px 1px 0 rgba(0,0,0,0.3);}
+        h2 { font-size: 0.9rem; margin: 0; color: var(--story-paper); font-weight: bold; }
 
+        /* ステータスグリッド（1行6列を維持） */
         .stat-grid-6col { display: grid; grid-template-columns: repeat(6, 1fr); gap: 4px; }
         .stat-unit { background: rgba(0, 0, 0, 0.15); border: 1px solid var(--story-border); padding: 6px 2px; display: flex; flex-direction: column; align-items: center; border-radius: 4px; }
         .stat-name-label { font-size: 0.65rem; font-weight: bold; color: var(--story-paper); margin-bottom: 4px; }
         .num-input { width: 90%; border: 1px solid #c9ad88; border-radius: 2px; text-align: center; font-size: 1rem; font-weight: 900; background: var(--story-paper); color: var(--story-text); padding: 2px 0; outline: none; }
+        
         .target-ctrl { width: 100%; display: flex; flex-direction: column; gap: 2px; margin: 4px 0; }
-        .btn-step { width: 100%; border: none; background: #604028; color: var(--story-paper); font-size: 0.75rem; font-weight: bold; padding: 2px 0; cursor: pointer; border-radius: 2px; }
-        .rank-box { font-size: 0.85rem; font-weight: 900; color: var(--story-paper); background: rgba(0,0,0,0.3); padding: 2px 6px; border-radius: 4px; margin: 2px 0; }
+        .btn-step { width: 100%; border: none; background: #604028; color: var(--story-paper); font-size: 0.75rem; font-weight: bold; padding: 2px 0; cursor: pointer; border-radius: 2px; touch-action: manipulation; }
+        
+        .rank-box { font-size: 0.85rem; font-weight: 900; background: rgba(0,0,0,0.3); padding: 2px 6px; border-radius: 4px; margin: 2px 0; text-align: center; min-width: 20px; }
+        .rank-G { color: #f4ece0; } .rank-F { color: #4da6ff; } .rank-E { color: #2ecc71; } .rank-D { color: #e67e22; } .rank-C { color: #f1c40f; } .rank-B { color: #e74c3c; } .rank-A { color: #ff00ff; } .rank-S { color: #ffd700; text-shadow: 0 0 5px gold; }
+        
         .diff-text { font-size: 0.6rem; color: #c9ad88; font-weight: bold; }
         .kotsu-check { display: flex; align-items: center; justify-content: center; gap: 2px; margin-top: 5px; background: rgba(255, 255, 255, 0.05); padding: 3px; border-radius: 2px; cursor: pointer; }
         .kotsu-check span { font-size: 0.6rem; color: var(--story-paper); font-weight: bold; }
+        .btn-reset-single { background: rgba(0,0,0,0.2); color: #c9ad88; border: 1px solid var(--story-border); font-size: 0.5rem; margin-top: 4px; padding: 2px 0; width: 100%; cursor: pointer; border-radius: 2px; }
 
-        .btn-reset-all { font-size: 0.6rem; background: var(--story-accent); color: white; border: none; padding: 4px 10px; border-radius: 4px; cursor: pointer; font-weight: bold; }
-        .btn-reset-single { background: rgba(0,0,0,0.2); color: #c9ad88; border: 1px solid var(--story-border); font-size: 0.5rem; margin-top: 4px; padding: 2px 0; width: 100%; cursor: pointer; }
+        /* スキルリスト */
+        .skill-container { background: rgba(0,0,0,0.2); border: 1px solid var(--story-border); border-radius: 4px; margin-bottom: 6px; overflow: hidden; }
+        .skill-summary { padding: 10px; display: flex; flex-direction: column; gap: 6px; cursor: pointer; }
+        .summary-top { display: flex; justify-content: space-between; align-items: center; }
+        .skill-name-area { font-weight: bold; display: flex; align-items: center; gap: 6px; }
+        .toggle-icon { font-size: 0.5rem; transition: 0.2s; color: var(--story-accent); }
+        .inline-costs { display: flex; flex-wrap: wrap; gap: 4px; }
+        .cost-tag { font-size: 0.6rem; padding: 1px 4px; border-radius: 3px; font-weight: bold; background: rgba(0,0,0,0.3); }
 
-        .search-input-main { width: 100%; padding: 12px; border: 1px solid #c9ad88; border-radius: 4px; font-size: 0.9rem; background: var(--story-paper); color: var(--story-text); box-sizing: border-box; outline: none; }
-        .sim-filters { display: grid; grid-template-columns: repeat(3, 1fr); gap: 5px; margin-top: 10px; }
-        .sim-filters select { background: #604028; color: var(--story-paper); border: 1px solid var(--story-border); font-size: 0.7rem; padding: 8px; border-radius: 4px; }
-
-        footer { text-align: center; padding: 40px 15px; background: #2c1a0c; color: #888; margin-top: 20px; font-size: 0.75rem; border-top: 2px solid var(--story-border); }
-        .footer-nav { display: flex; flex-wrap: wrap; justify-content: center; gap: 15px; font-size: 0.85rem; margin-bottom: 20px; }
-        .footer-nav a { color: #fff; text-decoration: none; opacity: 0.7; }
-        .copyright { font-size: 0.75rem; color: #666; }
+        .skill-detail { padding: 10px; background: rgba(0,0,0,0.3); border-top: 1px dashed var(--story-border); font-size: 0.75rem; }
+        .btn-share { background: var(--story-accent); color: #fff; border: 2px solid #e67e22; padding: 12px; border-radius: 6px; font-weight: bold; width: 100%; cursor: pointer; margin-bottom: 12px; }
+        .search-input-main { width: 100%; padding: 12px; border: 1px solid #c9ad88; border-radius: 4px; background: var(--story-paper); color: var(--story-text); box-sizing: border-box; }
+        
+        @media (max-width: 600px) {
+            .stat-grid-6col { gap: 2px; }
+            .num-input { font-size: 0.9rem; }
+        }
     </style>
 </head>
 <body>
@@ -101,85 +100,40 @@
 <div class="exp-banner">
     <div class="exp-banner-title">◆ 必要経験点 合計 ◆</div>
     <div class="exp-grid">
-        <div>筋力<span id="total-muscle">0</span></div>
-        <div>敏捷<span id="total-agile">0</span></div>
-        <div>技術<span id="total-tech">0</span></div>
-        <div>知力<span id="total-intel">0</span></div>
-        <div>精神<span id="total-mental">0</span></div>
+        <div class="exp-muscle">筋力<span id="total-muscle">0</span></div>
+        <div class="exp-agile">敏捷<span id="total-agile">0</span></div>
+        <div class="exp-tech">技術<span id="total-tech">0</span></div>
+        <div class="exp-intel">知力<span id="total-intel">0</span></div>
+        <div class="exp-mental">精神<span id="total-mental">0</span></div>
     </div>
 </div>
 
 <div id="app">
     <main>
+        <button class="btn-share" onclick="copyShareURL()">🔗 この育成計画を共有する (URLコピー)</button>
+
         <section class="card">
-            <div class="card-header">
-                <h2>現在の能力値</h2>
-                <button class="btn-reset-all" onclick="resetAllStarts()">全リセット</button>
-            </div>
+            <div class="card-header"><h2>現在の能力値</h2><button onclick="resetAllStarts()" style="font-size:0.6rem; background:none; border:1px solid var(--story-border); color:var(--story-paper); padding:2px 5px; border-radius:3px;">全リセ</button></div>
             <div class="stat-grid-6col" id="start-stats-container"></div>
         </section>
 
         <section class="card">
-            <div class="card-header">
-                <h2>目標値 ・ コツ設定</h2>
-                <button class="btn-reset-all" onclick="resetAllTargets()">全リセット</button>
-            </div>
+            <div class="card-header"><h2>目標能力 ・ コツ</h2><button onclick="resetAllTargets()" style="font-size:0.6rem; background:none; border:1px solid var(--story-border); color:var(--story-paper); padding:2px 5px; border-radius:3px;">全リセ</button></div>
             <div class="stat-grid-6col" id="target-stats-container"></div>
         </section>
 
         <section class="card">
-            <div class="card-header">
-                <h2>修得予定のスキル</h2>
-                <button class="btn-reset-all" onclick="resetAbilities()">全削除</button>
-            </div>
+            <div class="card-header"><h2>修得予定スキル</h2><button onclick="resetAbilities()" style="font-size:0.6rem; background:none; border:1px solid var(--story-border); color:var(--story-paper); padding:2px 5px; border-radius:3px;">全削除</button></div>
             <div id="selected-list"></div>
         </section>
 
         <section class="card">
-            <h2 style="margin-bottom: 10px;">スキルを検索して追加</h2>
+            <h2>スキル検索（タップで詳細）</h2>
             <input type="text" id="search-input" class="search-input-main" placeholder="能力名で検索..." oninput="searchInSim()">
-            <div class="sim-filters">
-                <select id="fCat" onchange="searchInSim()">
-                    <option value="">全カテゴリ</option>
-                    <option value="アクションスキル・青">アクション・青</option>
-                    <option value="アクションスキル・金">アクション・金</option>
-                    <option value="サポートスキル・青">サポート・青</option>
-                    <option value="サポートスキル・青赤">サポート・青赤</option>
-                    <option value="サポートスキル・金">サポート・金</option>
-                    <option value="必殺技・虹">必殺・虹</option>
-                </select>
-                <select id="fAttr" onchange="searchInSim()">
-                    <option value="">全属性</option>
-                    <option value="火属性">火属性</option>
-                    <option value="風属性">風属性</option>
-                    <option value="水属性">水属性</option>
-                </select>
-                <select id="fJob" onchange="searchInSim()">
-                    <option value="">全ジョブ</option>
-                    <option value="剣士">剣士</option>
-                    <option value="弓使い">弓使い</option>
-                    <option value="魔法使い">魔法使い</option>
-                    <option value="魔道士">魔道士</option>
-                </select>
-            </div>
-            <div id="search-results" style="margin-top:10px; max-height:180px; overflow-y:auto; border-top:1px solid var(--story-border);"></div>
+            <div id="search-results" style="margin-top:10px; max-height:400px; overflow-y:auto;"></div>
         </section>
     </main>
 </div>
-
-<footer>
-    <div class="footer-nav">
-        <a href="index.html">ホーム</a>
-        <a href="simulator.html">シミュレーター</a>
-        <a href="search.html">特能図鑑</a>
-        <a href="terms.html">利用規約</a>
-        <a href="https://x.com/priskin_pawa" target="_blank">X (旧Twitter)</a>
-    </div>
-    <p class="copyright">
-        &copy; 2026 プリスキンのパワアド育成ナビ<br>
-        当サイトは個人によるファンサイトであり、公式とは関係ありません。
-    </p>
-</footer>
 
 <script src="support-skills.js"></script>
 <script src="action-skills.js"></script>
