@@ -1,11 +1,12 @@
 /**
  * プリスキンのパワアド育成ナビ - ロジック完全版
- * 数値増減の感度調整（ディレイ導入）済み
+ * 操作感度調整（単押し/長押し分離・二重反応防止）済み
  */
 
 let selectedAbilities = [];
 let holdTimer = null;
 let holdInterval = null;
+let isProcessing = false; // 二重実行防止フラグ
 
 const STAT_DEFS = [
     { id: 'hp',      name: '生命力', key: 'hp',      max: 95 },
@@ -99,6 +100,9 @@ function addAbility(name, kotsu = 0) {
     renderSelected(); calculateTotal();
 }
 
+/**
+ * 初期化処理
+ */
 function init() {
     const sCon = document.getElementById('start-stats-container');
     const tCon = document.getElementById('target-stats-container');
@@ -106,35 +110,49 @@ function init() {
     
     STAT_DEFS.forEach(stat => {
         const sDiv = document.createElement('div'); sDiv.className = 'stat-unit';
-        sDiv.innerHTML = `<div class="stat-name-label">${stat.name.substring(0,1)}</div><div class="target-ctrl"><button class="btn-step" onmousedown="startHold('${stat.id}', 1, 'start')" ontouchstart="startHold('${stat.id}', 1, 'start')">▲</button><input type="number" class="num-input" id="${stat.id}-start" value="1" oninput="manualInput('${stat.id}', 'start')"><button class="btn-step" onmousedown="startHold('${stat.id}', -1, 'start')" ontouchstart="startHold('${stat.id}', -1, 'start')">▼</button></div>`;
+        sDiv.innerHTML = `<div class="stat-name-label">${stat.name.substring(0,1)}</div><div class="target-ctrl"><button class="btn-step" onmousedown="startHold('${stat.id}', 1, 'start')" ontouchstart="event.preventDefault(); startHold('${stat.id}', 1, 'start')">▲</button><input type="number" class="num-input" id="${stat.id}-start" value="1" oninput="manualInput('${stat.id}', 'start')"><button class="btn-step" onmousedown="startHold('${stat.id}', -1, 'start')" ontouchstart="event.preventDefault(); startHold('${stat.id}', -1, 'start')">▼</button></div>`;
         sCon.appendChild(sDiv);
         const tDiv = document.createElement('div'); tDiv.className = 'stat-unit';
-        tDiv.innerHTML = `<div class="stat-name-label">${stat.name.substring(0,1)}<span class="diff-text" id="${stat.id}-diff">+0</span></div><div class="target-ctrl"><button class="btn-step" onmousedown="startHold('${stat.id}', 1, 'target')" ontouchstart="startHold('${stat.id}', 1, 'target')">▲</button><input type="number" class="num-input" id="${stat.id}-target-input" value="1" oninput="manualInput('${stat.id}', 'target')"><button class="btn-step" onmousedown="startHold('${stat.id}', -1, 'target')" ontouchstart="startHold('${stat.id}', -1, 'target')">▼</button></div><div id="${stat.id}-rank-display" class="rank-box rank-G">G</div><label class="kotsu-check"><input type="checkbox" id="${stat.id}-kotsu" onchange="calculateTotal()"><span>コツ</span></label><button class="btn-reset-single" onclick="resetSingleTarget('${stat.id}')">リセット</button>`;
+        tDiv.innerHTML = `<div class="stat-name-label">${stat.name.substring(0,1)}<span class="diff-text" id="${stat.id}-diff">+0</span></div><div class="target-ctrl"><button class="btn-step" onmousedown="startHold('${stat.id}', 1, 'target')" ontouchstart="event.preventDefault(); startHold('${stat.id}', 1, 'target')">▲</button><input type="number" class="num-input" id="${stat.id}-target-input" value="1" oninput="manualInput('${stat.id}', 'target')"><button class="btn-step" onmousedown="startHold('${stat.id}', -1, 'target')" ontouchstart="event.preventDefault(); startHold('${stat.id}', -1, 'target')">▼</button></div><div id="${stat.id}-rank-display" class="rank-box rank-G">G</div><label class="kotsu-check"><input type="checkbox" id="${stat.id}-kotsu" onchange="calculateTotal()"><span>コツ</span></label><button class="btn-reset-single" onclick="resetSingleTarget('${stat.id}')">リセット</button>`;
         tCon.appendChild(tDiv);
     });
-    window.addEventListener('mouseup', stopHold); window.addEventListener('touchend', stopHold);
+
+    // 共通の停止イベント
+    ['mouseup', 'mouseleave', 'touchend', 'touchcancel'].forEach(ev => {
+        window.addEventListener(ev, stopHold);
+    });
+    
     loadData();
 }
 
 /**
- * 改良版：長押し処理
- * 最初の1クリック目は即座に反応し、800ms待ってから連続加算を開始
+ * 改良版：増減ボタンの制御
  */
 function startHold(id, d, type) {
-    // 最初の1回
+    if (isProcessing) return;
+    isProcessing = true;
+
+    // 1. 最初の一撃
     changeValue(id, d, type);
 
-    // 400ms秒後に連続加算を開始（これが感度調整のキモです）
+    // 2. 0.45秒後に長押し判定
     holdTimer = setTimeout(() => {
         holdInterval = setInterval(() => {
             changeValue(id, d, type);
-        }, 70); // 連続加算のスピード（70ms間隔）
-    }, 400); 
+        }, 100); // 連続スピードを100ms（秒間10）にして制御しやすく調整
+    }, 450); 
 }
 
 function stopHold() {
     clearTimeout(holdTimer);
     clearInterval(holdInterval);
+    holdTimer = null;
+    holdInterval = null;
+    
+    // 指を離してから少しだけロックすることで二重実行を完全に防ぐ
+    setTimeout(() => {
+        isProcessing = false;
+    }, 50);
 }
 
 function changeValue(id, d, type) {
