@@ -89,6 +89,28 @@
         .effect-box { padding: 12px; background: #dfccaf; border: 1px solid #c9ad88; border-radius: 4px; font-size: 0.85rem; font-weight: bold; color: var(--story-text); }
         .condition-text { font-size: 0.75rem; color: #7c5535; margin-top: 8px; display: block; font-weight: bold; }
 
+        /* トップへ戻るボタン */
+        #backToTop {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            width: 50px;
+            height: 50px;
+            background-color: var(--story-accent);
+            color: white;
+            border: 2px solid var(--story-paper);
+            border-radius: 50%;
+            cursor: pointer;
+            display: none;
+            justify-content: center;
+            align-items: center;
+            font-size: 1.2rem;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+            z-index: 2000;
+            transition: 0.3s;
+        }
+        #backToTop:hover { transform: scale(1.1); background-color: #e67e22; }
+
         footer { text-align: center; padding: 40px 15px; background: #2c1a0c; color: #888; margin-top: 40px; border-top: 2px solid var(--story-border); }
         .footer-nav { display: flex; flex-wrap: wrap; justify-content: center; gap: 15px; font-size: 0.85rem; margin-bottom: 20px; }
         .footer-nav a { color: #fff; text-decoration: none; opacity: 0.7; }
@@ -97,6 +119,7 @@
         @media (max-width: 900px) { 
             .container { flex-direction: column; } 
             .sidebar { width: 100%; height: auto; position: relative; top: 0; border-right: none; border-bottom: 2px solid var(--story-border); }
+            #backToTop { bottom: 20px; right: 20px; width: 45px; height: 45px; }
         }
     </style>
 </head>
@@ -150,8 +173,8 @@
                     <option value="剣士">剣士</option>
                     <option value="弓使い">弓使い</option>
                     <option value="魔法使い">魔法使い</option>
-                    <option value="重戦士">重戦士</option>
                     <option value="魔闘士">魔闘士</option>
+                    <option value="重戦士">重戦士</option>
                     <option value="僧侶">僧侶</option>
                 </select>
             </div>
@@ -165,6 +188,8 @@
         <div id="list">記録を読み込み中...</div>
     </div>
 </div>
+
+<button id="backToTop">▲</button>
 
 <footer>
     <div class="footer-nav">
@@ -194,8 +219,9 @@
     const attrEl = document.getElementById('fAttr');
     const jobEl = document.getElementById('fJob');
     const countEl = document.getElementById('resCount');
+    const backToTopBtn = document.getElementById('backToTop');
 
-    // 表示設定（カテゴリ名とバッジの色の紐付け）
+    // 表示設定（内部カテゴリ名と表示ラベルの変換用）
     const config = {
         "アクションスキル・青": { color: "var(--color-act-blue)", label: "アクション・青" },
         "アクションスキル・金": { color: "var(--color-act-gold)", label: "アクション・金" },
@@ -211,7 +237,7 @@
         const attributeFilter = attrEl.value;
         const jobFilter = jobEl.value;
 
-        // 全ファイルを統合（分割されたSUPPORT_SKILLSを自動的にマージ）
+        // 全ファイルを統合（SUPPORT_SKILLSは各ファイルでマージされている前提）
         const allAbilities = [
             ...(typeof SUPPORT_SKILLS !== 'undefined' ? SUPPORT_SKILLS : []),
             ...(typeof ACTION_SKILLS !== 'undefined' ? ACTION_SKILLS : []),
@@ -219,15 +245,12 @@
         ];
 
         const filtered = allAbilities.filter(d => {
-            // 文字列検索
             const searchTarget = `${d.name} ${d.effect} ${d.condition}`.toLowerCase();
             const matchQ = !query || searchTarget.includes(query);
             
-            // カテゴリ検索 (バッジのラベルと一致するか確認)
             const style = config[d.category] || { label: d.category };
             const matchCat = !categoryFilter || style.label === categoryFilter;
 
-            // 属性・ジョブ検索
             const matchAttr = !attributeFilter || (d.condition && d.condition.includes(attributeFilter));
             const matchJob = !jobFilter || (d.condition && d.condition.includes(jobFilter));
 
@@ -244,9 +267,7 @@
         listEl.innerHTML = filtered.map(d => {
             const style = config[d.category] || { color: "#8a6d55", label: d.category };
             let badgeBg = style.color;
-            if (d.category === "必殺技・虹") {
-                badgeBg = "linear-gradient(45deg, #d35400, #f1c40f, #e67e22)";
-            }
+            if (d.category === "必殺技・虹") badgeBg = "linear-gradient(45deg, #d35400, #f1c40f, #e67e22)";
             
             return `
                 <div class="ability-card ${style.class || ''}" style="border-left-color: ${style.color}">
@@ -268,10 +289,24 @@
         }).join('');
     }
 
+    // スクロール検知
+    window.onscroll = function() {
+        if (document.body.scrollTop > 400 || document.documentElement.scrollTop > 400) {
+            backToTopBtn.style.display = "flex";
+        } else {
+            backToTopBtn.style.display = "none";
+        }
+    };
+
+    // トップへ戻る
+    backToTopBtn.onclick = function() {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    };
+
     // イベントリスナー
     [qEl, catEl, attrEl, jobEl].forEach(el => el.addEventListener('input', render));
 
-    // 初期化
+    // 初期起動
     window.onload = render;
 </script>
 </body>
