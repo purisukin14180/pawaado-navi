@@ -1,12 +1,12 @@
 /**
  * プリスキンのパワアド育成ナビ - ロジック完全版
- * 操作感度調整（単押し/長押し分離・二重反応防止）済み
+ * 感度調整（単押し/長押し分離・スマホ二重反応防止）
  */
 
 let selectedAbilities = [];
 let holdTimer = null;
 let holdInterval = null;
-let isProcessing = false; // 二重実行防止フラグ
+let isProcessing = false; // 二重実行防止用フラグ
 
 const STAT_DEFS = [
     { id: 'hp',      name: '生命力', key: 'hp',      max: 95 },
@@ -58,6 +58,7 @@ function searchInSim() {
     const fJob = document.getElementById('fJob').value;
     const fTarget = document.getElementById('fTarget').value;
     const area = document.getElementById('search-results');
+    if(!area) return;
     area.innerHTML = '';
     
     if (typeof SPECIAL_ABILITIES === 'undefined') return;
@@ -100,9 +101,6 @@ function addAbility(name, kotsu = 0) {
     renderSelected(); calculateTotal();
 }
 
-/**
- * 初期化処理
- */
 function init() {
     const sCon = document.getElementById('start-stats-container');
     const tCon = document.getElementById('target-stats-container');
@@ -110,14 +108,13 @@ function init() {
     
     STAT_DEFS.forEach(stat => {
         const sDiv = document.createElement('div'); sDiv.className = 'stat-unit';
-        sDiv.innerHTML = `<div class="stat-name-label">${stat.name.substring(0,1)}</div><div class="target-ctrl"><button class="btn-step" onmousedown="startHold('${stat.id}', 1, 'start')" ontouchstart="event.preventDefault(); startHold('${stat.id}', 1, 'start')">▲</button><input type="number" class="num-input" id="${stat.id}-start" value="1" oninput="manualInput('${stat.id}', 'start')"><button class="btn-step" onmousedown="startHold('${stat.id}', -1, 'start')" ontouchstart="event.preventDefault(); startHold('${stat.id}', -1, 'start')">▼</button></div>`;
+        sDiv.innerHTML = `<div class="stat-name-label">${stat.name.substring(0,1)}</div><div class="target-ctrl"><button class="btn-step" onmousedown="startHold(event, '${stat.id}', 1, 'start')" ontouchstart="startHold(event, '${stat.id}', 1, 'start')">▲</button><input type="number" class="num-input" id="${stat.id}-start" value="1" step="1" oninput="manualInput('${stat.id}', 'start')"><button class="btn-step" onmousedown="startHold(event, '${stat.id}', -1, 'start')" ontouchstart="startHold(event, '${stat.id}', -1, 'start')">▼</button></div>`;
         sCon.appendChild(sDiv);
         const tDiv = document.createElement('div'); tDiv.className = 'stat-unit';
-        tDiv.innerHTML = `<div class="stat-name-label">${stat.name.substring(0,1)}<span class="diff-text" id="${stat.id}-diff">+0</span></div><div class="target-ctrl"><button class="btn-step" onmousedown="startHold('${stat.id}', 1, 'target')" ontouchstart="event.preventDefault(); startHold('${stat.id}', 1, 'target')">▲</button><input type="number" class="num-input" id="${stat.id}-target-input" value="1" oninput="manualInput('${stat.id}', 'target')"><button class="btn-step" onmousedown="startHold('${stat.id}', -1, 'target')" ontouchstart="event.preventDefault(); startHold('${stat.id}', -1, 'target')">▼</button></div><div id="${stat.id}-rank-display" class="rank-box rank-G">G</div><label class="kotsu-check"><input type="checkbox" id="${stat.id}-kotsu" onchange="calculateTotal()"><span>コツ</span></label><button class="btn-reset-single" onclick="resetSingleTarget('${stat.id}')">リセット</button>`;
+        tDiv.innerHTML = `<div class="stat-name-label">${stat.name.substring(0,1)}<span class="diff-text" id="${stat.id}-diff">+0</span></div><div class="target-ctrl"><button class="btn-step" onmousedown="startHold(event, '${stat.id}', 1, 'target')" ontouchstart="startHold(event, '${stat.id}', 1, 'target')">▲</button><input type="number" class="num-input" id="${stat.id}-target-input" value="1" step="1" oninput="manualInput('${stat.id}', 'target')"><button class="btn-step" onmousedown="startHold(event, '${stat.id}', -1, 'target')" ontouchstart="startHold(event, '${stat.id}', -1, 'target')">▼</button></div><div id="${stat.id}-rank-display" class="rank-box rank-G">G</div><label class="kotsu-check"><input type="checkbox" id="${stat.id}-kotsu" onchange="calculateTotal()"><span>コツ</span></label><button class="btn-reset-single" onclick="resetSingleTarget('${stat.id}')">リセット</button>`;
         tCon.appendChild(tDiv);
     });
 
-    // 共通の停止イベント
     ['mouseup', 'mouseleave', 'touchend', 'touchcancel'].forEach(ev => {
         window.addEventListener(ev, stopHold);
     });
@@ -126,20 +123,28 @@ function init() {
 }
 
 /**
- * 改良版：増減ボタンの制御
+ * 改良版：増減ボタン制御
+ * タッチとマウスの二重反応をisProcessingで完全に防ぎ、
+ * ディレイを0.45秒に設定して「1上げる」操作を確実にします。
  */
-function startHold(id, d, type) {
+function startHold(e, id, d, type) {
     if (isProcessing) return;
+    
+    // タッチイベントの場合はブラウザのデフォルト挙動（クリックの擬似発火）を抑制
+    if (e.type === 'touchstart') {
+        if (e.cancelable) e.preventDefault();
+    }
+    
     isProcessing = true;
 
-    // 1. 最初の一撃
+    // 1回目：即座に変更
     changeValue(id, d, type);
 
-    // 2. 0.45秒後に長押し判定
+    // 長押し判定用のタイマー（450ms = 0.45秒）
     holdTimer = setTimeout(() => {
         holdInterval = setInterval(() => {
             changeValue(id, d, type);
-        }, 100); // 連続スピードを100ms（秒間10）にして制御しやすく調整
+        }, 120); // 連続加算の速度を少し落として制御性を高める（120ms間隔）
     }, 450); 
 }
 
@@ -149,7 +154,7 @@ function stopHold() {
     holdTimer = null;
     holdInterval = null;
     
-    // 指を離してから少しだけロックすることで二重実行を完全に防ぐ
+    // 離した後の誤爆防止のため50msだけロックしてから解除
     setTimeout(() => {
         isProcessing = false;
     }, 50);
@@ -190,7 +195,8 @@ function calculateTotal() {
         const sV = parseInt(document.getElementById(`${stat.id}-start`).value) || 1;
         const tV = parseInt(document.getElementById(`${stat.id}-target-input`).value) || 1;
         const rate = document.getElementById(`${stat.id}-kotsu`).checked ? 0.98 : 1.0;
-        document.getElementById(`${stat.id}-diff`).innerText = `+${tV - sV}`;
+        const diffEl = document.getElementById(`${stat.id}-diff`);
+        if(diffEl) diffEl.innerText = `+${tV - sV}`;
         const tbl = BASIC_COST_TABLE[stat.key];
         for (let i = sV; i < tV; i++) {
             const set = tbl.find(s => i <= s.max) || tbl[tbl.length - 1];
@@ -233,6 +239,7 @@ function toggleDetail(p, i) {
 }
 function updateKotsu(i, v) { selectedAbilities[i].kotsu = parseInt(v); calculateTotal(); renderSelected(); }
 function removeAbility(n) { selectedAbilities = selectedAbilities.filter(a => a.name !== n); renderSelected(); calculateTotal(); }
+
 function applyPreset(type) {
     const key = document.getElementById('preset-select').value;
     if (!key) return;
@@ -249,6 +256,7 @@ function resetSingleTarget(id) { const sVal = document.getElementById(`${id}-sta
 function resetAllStarts() { STAT_DEFS.forEach(s => document.getElementById(`${s.id}-start`).value = 1); calculateTotal(); }
 function resetAllTargets() { STAT_DEFS.forEach(s => resetSingleTarget(s.id)); }
 function resetAbilities() { selectedAbilities = []; renderSelected(); calculateTotal(); }
+
 function copyShareURL() {
     const p = new URLSearchParams();
     STAT_DEFS.forEach(s => p.set(s.id === 'hp' ? 'hp' : s.id.substring(0, 1), document.getElementById(`${s.id}-target-input`).value));
@@ -263,7 +271,7 @@ function saveData() {
 function loadData() {
     const params = new URLSearchParams(window.location.search);
     if (params.has('hp') || params.has('p') || params.has('s')) {
-        STAT_DEFS.forEach(s => { const v = params.get(s.id === 'hp' ? 'hp' : s.id.substring(0, 1)); if (v) { document.getElementById(`${s.id}-target-input`).value = v; updateRankDisplay(s.id, v); } });
+        STAT_DEFS.forEach(s => { const v = params.get(s.id === 'hp' ? 'hp' : s.id.substring(0, 1)); if (v) { const el = document.getElementById(`${s.id}-target-input`); if(el) { el.value = v; updateRankDisplay(s.id, v); } } });
         const sList = params.get('s'); if (sList) { selectedAbilities = []; sList.split(',').forEach(n => addAbility(decodeURIComponent(n))); }
     } else {
         const saved = JSON.parse(localStorage.getItem('pawaNaviData'));
