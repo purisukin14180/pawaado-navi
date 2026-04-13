@@ -1,5 +1,6 @@
 /**
- * プリスキンのパワアド育成ナビ - ロジック完全版（耐久・精神データ更新済み）
+ * プリスキンのパワアド育成ナビ - ロジック完全版
+ * 数値増減の感度調整（ディレイ導入）済み
  */
 
 let selectedAbilities = [];
@@ -35,29 +36,8 @@ const BASIC_COST_TABLE = {
     power: [{max:9,muscle:6,agile:1,tech:3,intel:0,mental:0},{max:29,muscle:12,agile:2,tech:7,intel:0,mental:0},{max:39,muscle:18,agile:3,tech:10,intel:0,mental:0},{max:49,muscle:24,agile:4,tech:14,intel:0,mental:0},{max:59,muscle:30,agile:5,tech:18,intel:0,mental:0},{max:69,muscle:36,agile:6,tech:20,intel:0,mental:0},{max:79,muscle:42,agile:7,tech:24,intel:0,mental:0},{max:90,muscle:48,agile:8,tech:28,intel:0,mental:0}],
     magic: [{max:9,muscle:0,agile:2,tech:0,intel:6,mental:2},{max:29,muscle:0,agile:5,tech:0,intel:12,mental:4},{max:39,muscle:0,agile:7,tech:0,intel:18,mental:6},{max:49,muscle:0,agile:10,tech:0,intel:24,mental:8},{max:59,muscle:0,agile:13,tech:30,intel:30,mental:10},{max:69,muscle:0,agile:14,tech:36,intel:36,mental:12},{max:79,muscle:0,agile:17,tech:42,intel:42,mental:12},{max:89,muscle:0,agile:20,tech:48,intel:48,mental:16},{max:100,muscle:0,agile:26,tech:60,intel:60,mental:20}],
     dex: [{max:9,muscle:0,agile:3,tech:6,intel:2,mental:0},{max:29,muscle:0,agile:6,tech:12,intel:3,mental:0},{max:39,muscle:0,agile:9,tech:18,intel:4,mental:0},{max:49,muscle:0,agile:12,tech:24,intel:6,mental:0},{max:59,muscle:0,agile:15,tech:30,intel:8,mental:0},{max:69,muscle:0,agile:18,tech:36,intel:8,mental:0},{max:79,muscle:0,agile:21,tech:42,intel:10,mental:0},{max:89,muscle:0,agile:24,tech:48,intel:12,mental:0},{max:95,muscle:0,agile:30,tech:60,intel:16,mental:0}],
-    // 耐久力：最新データ(max 95まで対応)
-    defense: [
-        {max:9,muscle:1,agile:6,tech:3,intel:0,mental:0},
-        {max:29,muscle:2,agile:11,tech:5,intel:0,mental:0},
-        {max:39,muscle:3,agile:16,tech:7,intel:0,mental:0},
-        {max:49,muscle:4,agile:22,tech:10,intel:0,mental:0},
-        {max:59,muscle:5,agile:28,tech:13,intel:0,mental:0},
-        {max:69,muscle:6,agile:33,tech:15,intel:0,mental:0},
-        {max:79,muscle:7,agile:38,tech:17,intel:0,mental:0},
-        {max:89,muscle:8,agile:44,tech:20,intel:0,mental:0},
-        {max:95,muscle:10,agile:55,tech:25,intel:0,mental:0}
-    ],
-    // 精神力：最新データ(max 90まで対応)
-    mental: [
-        {max:9,muscle:0,agile:0,tech:0,intel:3,mental:7},
-        {max:29,muscle:0,agile:0,tech:0,intel:6,mental:12},
-        {max:39,muscle:0,agile:0,tech:0,intel:9,mental:18},
-        {max:49,muscle:0,agile:0,tech:0,intel:12,mental:24},
-        {max:59,muscle:0,agile:0,tech:0,intel:16,mental:30},
-        {max:69,muscle:0,agile:0,tech:0,intel:19,mental:36},
-        {max:79,muscle:0,agile:0,tech:0,intel:22,mental:42},
-        {max:90,muscle:0,agile:0,tech:0,intel:25,mental:50}
-    ]
+    defense: [{max:9,muscle:1,agile:6,tech:3,intel:0,mental:0},{max:29,muscle:2,agile:11,tech:5,intel:0,mental:0},{max:39,muscle:3,agile:16,tech:7,intel:0,mental:0},{max:49,muscle:4,agile:22,tech:10,intel:0,mental:0},{max:59,muscle:5,agile:28,tech:13,intel:0,mental:0},{max:69,muscle:6,agile:33,tech:15,intel:0,mental:0},{max:79,muscle:7,agile:38,tech:17,intel:0,mental:0},{max:89,muscle:8,agile:44,tech:20,intel:0,mental:0},{max:95,muscle:10,agile:55,tech:25,intel:0,mental:0}],
+    mental: [{max:9,muscle:0,agile:0,tech:0,intel:3,mental:7},{max:29,muscle:0,agile:0,tech:0,intel:6,mental:12},{max:39,muscle:0,agile:0,tech:0,intel:9,mental:18},{max:49,muscle:0,agile:0,tech:0,intel:12,mental:24},{max:59,muscle:0,agile:0,tech:0,intel:16,mental:30},{max:69,muscle:0,agile:0,tech:0,intel:19,mental:36},{max:79,muscle:0,agile:0,tech:0,intel:22,mental:42},{max:90,muscle:0,agile:0,tech:0,intel:25,mental:50}]
 };
 
 function updateRankDisplay(id, val) {
@@ -79,7 +59,6 @@ function searchInSim() {
     const area = document.getElementById('search-results');
     area.innerHTML = '';
     
-    // SPECIAL_ABILITIES は外部または別定義の前提
     if (typeof SPECIAL_ABILITIES === 'undefined') return;
 
     const filtered = SPECIAL_ABILITIES.filter(a => {
@@ -137,8 +116,27 @@ function init() {
     loadData();
 }
 
-function startHold(id, d, type) { changeValue(id, d, type); holdTimer = setTimeout(() => { holdInterval = setInterval(() => changeValue(id, d, type), 80); }, 400); }
-function stopHold() { clearTimeout(holdTimer); clearInterval(holdInterval); }
+/**
+ * 改良版：長押し処理
+ * 最初の1クリック目は即座に反応し、400ms待ってから連続加算を開始
+ */
+function startHold(id, d, type) {
+    // 最初の1回
+    changeValue(id, d, type);
+
+    // 400ms秒後に連続加算を開始（これが感度調整のキモです）
+    holdTimer = setTimeout(() => {
+        holdInterval = setInterval(() => {
+            changeValue(id, d, type);
+        }, 70); // 連続加算のスピード（70ms間隔）
+    }, 400); 
+}
+
+function stopHold() {
+    clearTimeout(holdTimer);
+    clearInterval(holdInterval);
+}
+
 function changeValue(id, d, type) {
     const el = document.getElementById(type === 'start' ? `${id}-start` : `${id}-target-input`);
     const sDef = STAT_DEFS.find(s => s.id === id);
@@ -148,6 +146,7 @@ function changeValue(id, d, type) {
     if (type === 'target') updateRankDisplay(id, val);
     syncValues(id); calculateTotal();
 }
+
 function manualInput(id, type) {
     const el = document.getElementById(type === 'start' ? `${id}-start` : `${id}-target-input`);
     const sDef = STAT_DEFS.find(s => s.id === id);
@@ -155,6 +154,7 @@ function manualInput(id, type) {
     if (type === 'target') updateRankDisplay(id, el.value);
     syncValues(id); calculateTotal();
 }
+
 function syncValues(id) {
     const s = document.getElementById(`${id}-start`);
     const t = document.getElementById(`${id}-target-input`);
