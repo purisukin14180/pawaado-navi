@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>キャラコツ検索 | プリスキンのパワアド育成ナビ</title>
+    <style>
+        :root {
+            --story-bg: #4a2f1a;
+            --story-paper: #e9d5b5;
+            --story-panel: #7c5535;
+            --story-border: #9e7a5c;
+            --story-accent: #d35400;
+            --story-text: #3e2714;
+            --story-text-light: #f4ece0;
+            --nav-height: 60px;
+        }
+
+        body {
+            font-family: 'Hiragino Kaku Gothic ProN', 'Hiragino Sans', Meiryo, serif;
+            margin: 0; padding: 0; background-color: var(--story-bg);
+            background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADIAAAAyCAMAAAAp4BCFAAAABGdBTUEAALGPC/xhBQAAAAFzUkdCAK7OHOkAAAAzUExURf///8DAwL+/v76+vr29vby8vLu7u7m5ubm5ubm5ubm5ubm5ubm5ubm5ubm5ubm5ubm5ucp7H40AAAAQdFJOUwAgMEBQYHCAgI+fmKCgoMCwS645uAAAARRJREFUOMuVlVuWwyAMRAtIGOf+V22S45K8S9NfWp445SNoAt4H6I8f/wP0Zf8A/bHjL4B+0T8A/Xz9F0Df6B+AftY/AP14/Rdgf9A/oF9b/wXon8ZfAP4M+XNk49L4XwD+DPlzZOPS+FsAfgz5c2Tj0vgXIBuXxn8BsnFp/BcAW79uXBr/AsTWX7f9K4CtXzcu5V+AbFwa/wXA1q8bl8p/AbLx68al/AsAW79unMpfALb+2u1PAbLxK7Y7BcjGr9juFCAbt2K7XwCx9etWbE8Btv7alXcB2vYvX94CaNu/fPkXoG375etXgL7Y7BcgW//15U8AsvVfV94FyNafX3kXQNv6S9f/AVp55SND5bU6AAAAAElFTkSuQmCC');
+            color: var(--story-text-light); line-height: 1.6;
+        }
+
+        .topnav {
+            display: flex; justify-content: flex-start; align-items: center;
+            background: #2c1a0c; color: #fff; height: var(--nav-height); padding: 0 10px;
+            position: sticky; top: 0; z-index: 1000; border-bottom: 3px solid var(--story-accent);
+        }
+        .nav-links { display: flex; overflow-x: auto; white-space: nowrap; gap: 5px; width: 100%; }
+        .nav-links a { color: #fff; text-decoration: none; padding: 8px 12px; font-size: 0.9rem; font-weight: bold; border-radius: 4px; }
+        .nav-links a.current { background: var(--story-accent); }
+
+        .container { display: flex; max-width: 1400px; margin: 0 auto; min-height: calc(100vh - 120px); }
+
+        .sidebar { 
+            width: 300px; background: var(--story-panel); padding: 20px; border-right: 2px solid var(--story-border); 
+            height: calc(100vh - 60px); position: sticky; top: 60px; box-sizing: border-box; overflow-y: auto;
+        }
+        .sidebar h3 { font-size: 1.1rem; margin: 0 0 20px; color: var(--story-paper); border-left: 4px solid var(--story-accent); padding-left: 10px; text-shadow: 1px 1px 0 rgba(0,0,0,0.5); }
+        
+        .search-input { width: 100%; padding: 12px; border: 1px solid var(--story-border); border-radius: 4px; margin-bottom: 20px; font-size: 0.9rem; background: var(--story-paper); color: var(--story-text); box-sizing: border-box; outline: none; }
+
+        .filter-section { margin-bottom: 15px; border: 1px solid var(--story-border); border-radius: 4px; overflow: hidden; background: rgba(0,0,0,0.1); }
+        .filter-title { font-size: 0.8rem; font-weight: bold; background: rgba(0,0,0,0.2); color: var(--story-paper); padding: 8px 12px; border-bottom: 1px solid var(--story-border); }
+        .filter-options { padding: 8px; }
+        select { width: 100%; padding: 10px; border: 1px solid var(--story-border); border-radius: 4px; font-size: 0.85rem; outline: none; background: #604028; color: var(--story-paper); }
+
+        .main { flex: 1; padding: 20px; }
+        .main h1 { font-size: 1.4rem; margin: 0 0 20px; color: var(--story-paper); text-shadow: 2px 2px 0 rgba(0,0,0,0.5); }
+
+        /* キャラカード */
+        .ability-card { 
+            display: flex; background: var(--story-paper); border-radius: 4px; margin-bottom: 15px; 
+            box-shadow: 4px 4px 0px rgba(0,0,0,0.2); border: 1px solid #c9ad88; border-left: 10px solid var(--story-accent);
+            color: var(--story-text); overflow: hidden;
+        }
+        
+        /* 画像エリア */
+        .chara-img-area {
+            width: 140px; min-width: 140px; background: rgba(255,255,255,0.2);
+            display: flex; align-items: center; justify-content: center;
+            border-right: 1px dashed #c9ad88;
+        }
+        .chara-img-area img { max-width: 100%; height: auto; max-height: 160px; object-fit: contain; }
+
+        .chara-content { padding: 16px; flex: 1; }
+        .card-top { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 10px; }
+        .ability-title { font-size: 1.2rem; font-weight: 800; color: var(--story-text); }
+        .chara-id { font-size: 0.75rem; font-weight: bold; color: #8a6d55; }
+
+        .skill-group { margin-bottom: 8px; border-bottom: 1px dotted rgba(0,0,0,0.1); padding-bottom: 4px; }
+        .skill-label { font-size: 0.65rem; font-weight: bold; color: #8a6d55; display: block; }
+        .skill-name { font-size: 0.95rem; font-weight: 900; }
+        .rainbow { color: #d35400; }
+        .gold { color: #b7950b; }
+        .skill-cond { font-size: 0.75rem; color: #7c5535; font-weight: bold; margin-left: 8px; }
+
+        .kotsu-tags { display: flex; flex-wrap: wrap; gap: 4px; margin-top: 5px; }
+        .kotsu-tag { background: #dfccaf; border: 1px solid #c9ad88; border-radius: 4px; padding: 2px 10px; font-size: 0.8rem; font-weight: bold; }
+
+        #resCount { font-size: 0.8rem; color: var(--story-paper); text-align: right; margin-top: 10px; font-weight: bold; }
+
+        @media (max-width: 700px) { 
+            .container { flex-direction: column; } 
+            .sidebar { width: 100%; height: auto; position: relative; top: 0; border-right: none; }
+            .ability-card { flex-direction: column; }
+            .chara-img-area { width: 100%; height: 140px; border-right: none; border-bottom: 1px dashed #c9ad88; }
+        }
+    </style>
+</head>
+<body>
+
+<header class="topnav">
+    <nav class="nav-links">
+        <a href="index.html">ホーム</a>
+        <a href="simulator.html">シミュレーター</a>
+        <a href="search.html">特能図鑑</a>
+        <a href="chara_search.html" class="current">キャラコツ検索</a>
+    </nav>
+</header>
+
+<div class="container">
+    <div class="sidebar">
+        <h3>条件で絞り込む</h3>
+        <input type="text" id="q" class="search-input" placeholder="キャラ名、コツ、スキル...">
+
+        <div class="filter-section">
+            <div class="filter-title">属性</div>
+            <div class="filter-options">
+                <select id="fAttr">
+                    <option value="">すべての属性</option>
+                    <option value="火属性">火属性</option>
+                    <option value="水属性">水属性</option>
+                    <option value="風属性">風属性</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="filter-section">
+            <div class="filter-title">ジョブ</div>
+            <div class="filter-options">
+                <select id="fJob">
+                    <option value="">すべてのジョブ</option>
+                    <option value="剣士">剣士</option>
+                    <option value="弓使い">弓使い</option>
+                    <option value="魔法使い">魔法使い</option>
+                    <option value="魔闘士">魔闘士</option>
+                    <option value="重戦士">重戦士</option>
+                    <option value="僧侶">僧侶</option>
+                </select>
+            </div>
+        </div>
+
+        <div id="resCount">0 件ヒット</div>
+    </div>
+
+    <div class="main">
+        <h1>イベキャラコツ検索</h1>
+        <div id="list">記録を読み込み中...</div>
+    </div>
+</div>
+
+<script src="charaData.js"></script>
+<script>
+    const listEl = document.getElementById('list');
+    const qEl = document.getElementById('q');
+    const attrEl = document.getElementById('fAttr');
+    const jobEl = document.getElementById('fJob');
+    const countEl = document.getElementById('resCount');
+
+    function render() {
+        const query = qEl.value.trim().toLowerCase();
+        const attrFilter = attrEl.value;
+        const jobFilter = jobEl.value;
+
+        const filtered = CHARA_MASTER_DATA.filter(c => {
+            // 条件判定用のテキスト
+            const rCond = SKILL_REQUIREMENTS.rainbow[c.rainbow] || "";
+            const aCond = SKILL_REQUIREMENTS.goldA[c.goldA] || "";
+            const totalCond = rCond + aCond;
+
+            const matchAttr = !attrFilter || totalCond.includes(attrFilter);
+            const matchJob = !jobFilter || totalCond.includes(jobFilter);
+            
+            const searchTarget = `${c.name} ${c.rainbow} ${c.goldA} ${c.goldS} ${c.kotsu.join(' ')}`.toLowerCase();
+            const matchQ = !query || searchTarget.includes(query);
+
+            return matchAttr && matchJob && matchQ;
+        });
+
+        countEl.textContent = `${filtered.length} 件のキャラが見つかりました`;
+
+        if (filtered.length === 0) {
+            listEl.innerHTML = '<p style="text-align:center; padding:40px; color:var(--story-paper);">一致するキャラはいません</p>';
+            return;
+        }
+
+        listEl.innerHTML = filtered.map(c => {
+            const rCond = SKILL_REQUIREMENTS.rainbow[c.rainbow] ? `<span class="skill-cond">(${SKILL_REQUIREMENTS.rainbow[c.rainbow]})</span>` : "";
+            const aCond = SKILL_REQUIREMENTS.goldA[c.goldA] ? `<span class="skill-cond">(${SKILL_REQUIREMENTS.goldA[c.goldA]})</span>` : "";
+
+            return `
+                <div class="ability-card">
+                    <div class="chara-img-area">
+                        <img src="${c.img}" alt="${c.name}" onerror="this.style.opacity='0'; console.log('画像なし:', '${c.img}')">
+                    </div>
+                    <div class="chara-content">
+                        <div class="card-top">
+                            <div class="ability-title">${c.name}</div>
+                            <div class="chara-id">No.${c.id}</div>
+                        </div>
+                        <div class="skill-group">
+                            <span class="skill-label">虹必殺技</span>
+                            <span class="skill-name rainbow">${c.rainbow || 'ー'}</span>${rCond}
+                        </div>
+                        <div class="skill-group">
+                            <span class="skill-label">金アクション / 金サポート</span>
+                            <div style="margin-bottom:2px;"><span class="skill-name gold">${c.goldA || 'ー'}</span>${aCond}</div>
+                            <div><span class="skill-name gold">${c.goldS || 'ー'}</span><span class="skill-cond">(条件なし)</span></div>
+                        </div>
+                        <div class="kotsu-tags">
+                            ${c.kotsu.map(k => `<span class="kotsu-tag">${k}</span>`).join('')}
+                        </div>
+                    </div>
+                </div>
+            `;
+        }).join('');
+    }
+
+    [qEl, attrEl, jobEl].forEach(el => el.addEventListener('input', render));
+    window.onload = render;
+</script>
+</body>
+</html>

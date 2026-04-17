@@ -36,6 +36,8 @@
         }
 
         .topnav { display: flex; justify-content: flex-start; align-items: center; background: #2c1a0c; height: var(--nav-height); padding: 0 10px; position: sticky; top: 0; z-index: 1000; border-bottom: 3px solid var(--story-accent); }
+        .nav-links { display: flex; overflow-x: auto; white-space: nowrap; gap: 5px; width: 100%; }
+        .nav-links::-webkit-scrollbar { display: none; }
         .nav-links a { color: #fff; text-decoration: none; padding: 8px 12px; font-size: 0.9rem; font-weight: bold; border-radius: 4px; }
         .nav-links a.current { background: var(--story-accent); }
 
@@ -75,7 +77,7 @@
         .sim-filters { display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; margin-top: 10px; }
         .sim-filters select { 
             background: #604028; color: #fff; border: 1px solid var(--story-border); padding: 10px 2px; border-radius: 4px; 
-            font-size: 0.75rem; font-weight: bold; text-align: center; text-align-last: center; cursor: pointer;
+            font-size: 0.75rem; font-weight: bold; text-align: center; cursor: pointer;
         }
         .full-width-select { grid-column: span 3; margin-bottom: 4px; }
 
@@ -101,7 +103,7 @@
         <a href="index.html">ホーム</a>
         <a href="simulator.html" class="current">シミュレーター</a>
         <a href="search.html">特能図鑑</a>
-    </nav>
+        <a href="chara_search.html">キャラコツ検索</a> </nav>
 </header>
 
 <div class="exp-banner">
@@ -205,7 +207,12 @@
 
 <footer>
     <div class="footer-nav">
-        <a href="index.html">ホーム</a><a href="simulator.html">シミュレーター</a><a href="search.html">特能図鑑</a><a href="https://x.com/purisukin14180" target="_blank">X</a>
+        <a href="index.html">ホーム</a>
+        <a href="simulator.html">シミュレーター</a>
+        <a href="search.html">特能図鑑</a>
+        <a href="chara_search.html">キャラコツ検索</a>
+        <a href="terms.html">利用規約</a>
+        <a href="https://x.com/purisukin14180" target="_blank">X</a>
     </div>
     <p class="copyright">&copy; 2026 プリスキンのパワアド育成ナビ</p>
 </footer>
@@ -218,8 +225,6 @@
 <script src="hissatsu-skills.js"></script>
 
 <script>
-    // 全特能データを一つの配列に統合するロジック
-    // 各JSファイルで SUPPORT_SKILLS 変数に push/merge されている前提
     const SPECIAL_ABILITIES = [
         ...(typeof SUPPORT_SKILLS !== 'undefined' ? SUPPORT_SKILLS : []),
         ...(typeof ACTION_SKILLS !== 'undefined' ? ACTION_SKILLS : []),

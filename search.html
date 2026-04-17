@@ -89,25 +89,12 @@
         .effect-box { padding: 12px; background: #dfccaf; border: 1px solid #c9ad88; border-radius: 4px; font-size: 0.85rem; font-weight: bold; color: var(--story-text); }
         .condition-text { font-size: 0.75rem; color: #7c5535; margin-top: 8px; display: block; font-weight: bold; }
 
-        /* トップへ戻るボタン */
         #backToTop {
-            position: fixed;
-            bottom: 30px;
-            right: 30px;
-            width: 50px;
-            height: 50px;
-            background-color: var(--story-accent);
-            color: white;
-            border: 2px solid var(--story-paper);
-            border-radius: 50%;
-            cursor: pointer;
-            display: none;
-            justify-content: center;
-            align-items: center;
-            font-size: 1.2rem;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.3);
-            z-index: 2000;
-            transition: 0.3s;
+            position: fixed; bottom: 30px; right: 30px; width: 50px; height: 50px;
+            background-color: var(--story-accent); color: white; border: 2px solid var(--story-paper);
+            border-radius: 50%; cursor: pointer; display: none; justify-content: center;
+            align-items: center; font-size: 1.2rem; box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+            z-index: 2000; transition: 0.3s;
         }
         #backToTop:hover { transform: scale(1.1); background-color: #e67e22; }
 
@@ -119,7 +106,6 @@
         @media (max-width: 900px) { 
             .container { flex-direction: column; } 
             .sidebar { width: 100%; height: auto; position: relative; top: 0; border-right: none; border-bottom: 2px solid var(--story-border); }
-            #backToTop { bottom: 20px; right: 20px; width: 45px; height: 45px; }
         }
     </style>
 </head>
@@ -130,7 +116,7 @@
         <a href="index.html">ホーム</a>
         <a href="simulator.html">シミュレーター</a>
         <a href="search.html" class="current">特能図鑑</a>
-    </nav>
+        <a href="chara_search.html">キャラコツ検索</a> </nav>
 </header>
 
 <div class="container">
@@ -140,44 +126,38 @@
 
         <div class="filter-section">
             <div class="filter-title">カテゴリ</div>
-            <div class="filter-options">
-                <select id="fCat">
-                    <option value="">すべてのカテゴリ</option>
-                    <option value="アクション・青">アクション・青</option>
-                    <option value="アクション・金">アクション・金</option>
-                    <option value="サポート・青">サポート・青</option>
-                    <option value="サポート・青赤">サポート・青赤</option>
-                    <option value="サポート・金">サポート・金</option>
-                    <option value="必殺技・虹">必殺技・虹</option>
-                </select>
-            </div>
+            <select id="fCat">
+                <option value="">すべてのカテゴリ</option>
+                <option value="アクション・青">アクション・青</option>
+                <option value="アクション・金">アクション・金</option>
+                <option value="サポート・青">サポート・青</option>
+                <option value="サポート・青赤">サポート・青赤</option>
+                <option value="サポート・金">サポート・金</option>
+                <option value="必殺技・虹">必殺技・虹</option>
+            </select>
         </div>
 
         <div class="filter-section">
             <div class="filter-title">属性</div>
-            <div class="filter-options">
-                <select id="fAttr">
-                    <option value="">すべての属性</option>
-                    <option value="火属性">火属性</option>
-                    <option value="風属性">風属性</option>
-                    <option value="水属性">水属性</option>
-                </select>
-            </div>
+            <select id="fAttr">
+                <option value="">すべての属性</option>
+                <option value="火属性">火属性</option>
+                <option value="風属性">風属性</option>
+                <option value="水属性">水属性</option>
+            </select>
         </div>
 
         <div class="filter-section">
             <div class="filter-title">ジョブ</div>
-            <div class="filter-options">
-                <select id="fJob">
-                    <option value="">すべてのジョブ</option>
-                    <option value="剣士">剣士</option>
-                    <option value="弓使い">弓使い</option>
-                    <option value="魔法使い">魔法使い</option>
-                    <option value="魔闘士">魔闘士</option>
-                    <option value="重戦士">重戦士</option>
-                    <option value="僧侶">僧侶</option>
-                </select>
-            </div>
+            <select id="fJob">
+                <option value="">すべてのジョブ</option>
+                <option value="剣士">剣士</option>
+                <option value="弓使い">弓使い</option>
+                <option value="魔法使い">魔法使い</option>
+                <option value="魔闘士">魔闘士</option>
+                <option value="重戦士">重戦士</option>
+                <option value="僧侶">僧侶</option>
+            </select>
         </div>
 
         <div id="resCount" style="font-size: 0.8rem; color: var(--story-paper); text-align: right; margin-top: 10px; font-weight: bold;">0 件ヒット</div>
@@ -196,13 +176,8 @@
         <a href="index.html">ホーム</a>
         <a href="simulator.html">シミュレーター</a>
         <a href="search.html">特能図鑑</a>
-        <a href="terms.html">利用規約</a>
-        <a href="https://x.com/purisukin14180" target="_blank">X (旧Twitter)</a>
-    </div>
-    <p class="copyright">
-        &copy; 2026 プリスキンのパワアド育成ナビ<br>
-        当サイトは個人によるファンサイトであり、公式とは関係ありません。
-    </p>
+        <a href="chara_search.html">キャラコツ検索</a> </div>
+    <p class="copyright">&copy; 2026 プリスキンのパワアド育成ナビ</p>
 </footer>
 
 <script src="support-skills-blue.js"></script>
@@ -221,7 +196,6 @@
     const countEl = document.getElementById('resCount');
     const backToTopBtn = document.getElementById('backToTop');
 
-    // 表示設定（内部カテゴリ名と表示ラベルの変換用）
     const config = {
         "アクションスキル・青": { color: "var(--color-act-blue)", label: "アクション・青" },
         "アクションスキル・金": { color: "var(--color-act-gold)", label: "アクション・金" },
@@ -237,7 +211,6 @@
         const attributeFilter = attrEl.value;
         const jobFilter = jobEl.value;
 
-        // 全ファイルを統合（SUPPORT_SKILLSは各ファイルでマージされている前提）
         const allAbilities = [
             ...(typeof SUPPORT_SKILLS !== 'undefined' ? SUPPORT_SKILLS : []),
             ...(typeof ACTION_SKILLS !== 'undefined' ? ACTION_SKILLS : []),
@@ -247,13 +220,10 @@
         const filtered = allAbilities.filter(d => {
             const searchTarget = `${d.name} ${d.effect} ${d.condition}`.toLowerCase();
             const matchQ = !query || searchTarget.includes(query);
-            
             const style = config[d.category] || { label: d.category };
             const matchCat = !categoryFilter || style.label === categoryFilter;
-
             const matchAttr = !attributeFilter || (d.condition && d.condition.includes(attributeFilter));
             const matchJob = !jobFilter || (d.condition && d.condition.includes(jobFilter));
-
             return matchQ && matchCat && matchAttr && matchJob;
         });
 
@@ -289,7 +259,6 @@
         }).join('');
     }
 
-    // スクロール検知
     window.onscroll = function() {
         if (document.body.scrollTop > 400 || document.documentElement.scrollTop > 400) {
             backToTopBtn.style.display = "flex";
@@ -298,15 +267,11 @@
         }
     };
 
-    // トップへ戻る
     backToTopBtn.onclick = function() {
         window.scrollTo({ top: 0, behavior: 'smooth' });
     };
 
-    // イベントリスナー
     [qEl, catEl, attrEl, jobEl].forEach(el => el.addEventListener('input', render));
-
-    // 初期起動
     window.onload = render;
 </script>
 </body>

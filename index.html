@@ -52,35 +52,37 @@
     .hero h1 { font-size: 1.8em; margin: 0 0 15px; text-shadow: 2px 2px 0px rgba(0,0,0,0.5); letter-spacing: 0.1em; }
     .hero p { font-size: 0.95em; max-width: 600px; margin: 0 auto 30px; opacity: 0.9; }
 
-    .hero-btns { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; max-width: 450px; margin: 0 auto; }
+    /* ヒーローボタンを3列または柔軟に変更 */
+    .hero-btns { display: flex; flex-wrap: wrap; justify-content: center; gap: 12px; max-width: 700px; margin: 0 auto; }
     .hero-btns a {
-      display: flex; align-items: center; justify-content: center; padding: 14px 10px;
+      flex: 1; min-width: 140px; display: flex; align-items: center; justify-content: center; padding: 14px 10px;
       background: var(--story-paper); color: var(--story-text); text-decoration: none;
-      border-radius: 4px; font-weight: bold; font-size: 0.9rem; box-shadow: 3px 3px 0px rgba(0,0,0,0.3);
+      border-radius: 4px; font-weight: bold; font-size: 0.85rem; box-shadow: 3px 3px 0px rgba(0,0,0,0.3);
       border: 1px solid var(--story-border); transition: transform 0.2s;
     }
     .hero-btns a:active { transform: scale(0.95); }
     .hero-btns a.btn-primary { background: var(--story-accent); color: #fff; border-color: #e67e22; }
 
-    .hero-sub-btns { display: flex; justify-content: center; gap: 10px; margin-top: 20px; }
+    .hero-sub-btns { display: flex; justify-content: center; gap: 10px; margin-top: 25px; }
     .hero-sub-btns a {
       font-size: 0.75rem; color: var(--story-paper); text-decoration: none; background: rgba(0,0,0,0.3);
       padding: 5px 15px; border-radius: 20px; border: 1px solid var(--story-border); transition: 0.2s;
     }
     .hero-sub-btns a:hover { background: var(--story-accent); border-color: var(--story-paper); }
 
-    .container { max-width: 1000px; margin: -30px auto 40px; padding: 0 15px; }
+    .container { max-width: 1100px; margin: -30px auto 40px; padding: 0 15px; }
     .features {
       background: var(--story-panel); border-radius: 12px; padding: 30px 20px;
       box-shadow: 5px 5px 15px rgba(0,0,0,0.4); border: 2px solid var(--story-border);
     }
     .features h2 { text-align: center; color: var(--story-paper); margin-bottom: 25px; font-size: 1.4em; text-shadow: 1px 1px 0px rgba(0,0,0,0.5); }
+    
     .feature-grid { display: grid; grid-template-columns: 1fr; gap: 15px; }
     .feature-item {
       padding: 20px; border-radius: 8px; background: rgba(0,0,0,0.2); border: 1px solid var(--story-border);
       text-decoration: none; color: var(--story-paper); display: block; transition: 0.2s;
     }
-    .feature-item:hover { background: rgba(0,0,0,0.3); border-color: var(--story-accent); }
+    .feature-item:hover { background: rgba(0,0,0,0.3); border-color: var(--story-accent); transform: translateY(-3px); }
     .feature-item h3 { margin: 0 0 10px 0; color: var(--story-paper); font-size: 1.1em; display: flex; align-items: center; gap: 8px; }
     .feature-item p { font-size: 0.85em; color: #c9ad88; margin: 0; line-height: 1.6; }
 
@@ -104,6 +106,7 @@
     <a href="index.html" class="current">ホーム</a>
     <a href="simulator.html">シミュレーター</a>
     <a href="search.html">特能図鑑</a>
+    <a href="chara_search.html">キャラコツ検索</a>
   </nav>
 </header>
 
@@ -111,11 +114,12 @@
   <h1>プリスキンのパワアド育成ナビ</h1>
   <p>
     パワプロアドベンチャーズ（パワアド）の冒険を盤石に！<br>
-    経験点計算シミュレーターや特能図鑑で、理想の冒険者育成をサポートします。
+    シミュレーターや図鑑を駆使して、理想の冒険者パーティーを育成しましょう。
   </p>
   <div class="hero-btns">
     <a href="simulator.html" class="btn-primary">育成シミュレーター</a>
-    <a href="search.html">特能図鑑を見る</a>
+    <a href="chara_search.html" class="btn-primary">イベキャラコツ検索</a>
+    <a href="search.html">特能・スキル図鑑</a>
   </div>
 
   <div class="hero-sub-btns">
@@ -130,19 +134,19 @@
     <div class="feature-grid">
       <a href="simulator.html" class="feature-item">
         <h3>📜 育成シミュレーター</h3>
-        <p>初期ステータスから目標値までに必要な「筋力・敏捷・技術・知力・精神」を自動計算。コツの割引計算にも完全対応した、育成の羅針盤です。</p>
+        <p>初期値から目標能力値までに必要な経験点を自動計算。コツの割引率を反映し、無駄のない育成プランを立てるための羅針盤です。</p>
+      </a>
+      <a href="chara_search.html" class="feature-item">
+        <h3>👥 イベキャラコツ検索</h3>
+        <p>どのキャラがどの「コツ」を教えてくれるか、虹必殺技や金スキルの修得条件（職業×属性）は何かを画像付きで素早く検索できます。</p>
       </a>
       <a href="search.html" class="feature-item">
-        <h3>📖 特能図鑑</h3>
-        <p>アクションスキル、サポートスキル（青・金・青赤）、必殺技を詳細にデータベース化。修得に必要な経験点や条件を瞬時に検索できます。</p>
+        <h3>📖 特能スキル図鑑</h3>
+        <p>アクション、サポート、必殺技の全データを網羅。消費経験点や効果を確認し、キャラの完成形をイメージするのに役立ちます。</p>
       </a>
       <a href="https://www.myballpark-blog.com/archive/category/%E3%83%91%E3%83%AF%E3%82%A2%E3%83%89%EF%BD%9C%E6%94%BB%E7%95%A5%E6%83%85%E5%A0%B1" target="_blank" class="feature-item">
         <h3>🖋️ パワアド攻略ブログ</h3>
-        <p>最新のイベント情報やおすすめキャラの紹介など、シミュレーターと合わせて読みたい攻略情報を日々更新中！</p>
-      </a>
-      <a href="https://x.com/purisukin14180" target="_blank" class="feature-item">
-        <h3>📢 運営者のX（旧Twitter）</h3>
-        <p>シミュレーターの更新情報や、パワアドに関する雑談・最新ネタを発信しています。ご意見・ご質問もお気軽にどうぞ。</p>
+        <p>最新イベントの立ち回りやパーティー編成案など、シミュレーターとセットで役立つ攻略情報を随時発信しています。</p>
       </a>
     </div>
   </section>
@@ -153,6 +157,7 @@
     <a href="index.html">ホーム</a>
     <a href="simulator.html">シミュレーター</a>
     <a href="search.html">特能図鑑</a>
+    <a href="chara_search.html">キャラコツ検索</a>
     <a href="terms.html">利用規約</a>
     <a href="https://x.com/priskin_pawa" target="_blank">X (旧Twitter)</a>
   </div>

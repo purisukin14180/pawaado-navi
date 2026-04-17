@@ -1,0 +1,158 @@
+/* 基本設定 */
+:root {
+    --primary-color: #2c3e50;
+    --accent-color: #3498db;
+    --rainbow-text: #e67e22;
+    --gold-text: #b7950b;
+    --bg-color: #f0f2f5;
+    --border-color: #dee2e6;
+}
+
+body {
+    font-family: "Helvetica Neue", Arial, "Hiragino Kaku Gothic ProN", "Hiragino Sans", Meiryo, sans-serif;
+    background-color: var(--bg-color);
+    color: #333;
+    margin: 0;
+    padding: 20px;
+    line-height: 1.6;
+}
+
+.search-page-container {
+    max-width: 1100px;
+    margin: 0 auto;
+    background: #fff;
+    padding: 30px;
+    border-radius: 12px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+}
+
+/* ヘッダー */
+header {
+    border-bottom: 2px solid var(--primary-color);
+    margin-bottom: 25px;
+    padding-bottom: 10px;
+}
+
+h1 {
+    margin: 0;
+    font-size: 1.8rem;
+    color: var(--primary-color);
+}
+
+.subtitle {
+    font-size: 0.9rem;
+    color: #666;
+    margin: 5px 0 0 0;
+}
+
+/* 検索エリア */
+.search-box {
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+#searchInput {
+    flex: 1;
+    padding: 12px 15px;
+    font-size: 1rem;
+    border: 2px solid var(--border-color);
+    border-radius: 8px;
+    outline: none;
+    transition: border-color 0.3s;
+}
+
+#searchInput:focus {
+    border-color: var(--accent-color);
+}
+
+.search-count {
+    font-size: 0.9rem;
+    font-weight: bold;
+    color: var(--primary-color);
+    white-space: nowrap;
+}
+
+/* テーブルスタイル */
+.table-wrapper {
+    overflow-x: auto;
+}
+
+.chara-table {
+    width: 100%;
+    border-collapse: collapse;
+    min-width: 800px;
+    border: 1px solid var(--border-color);
+}
+
+.chara-table th {
+    background-color: #f8f9fa;
+    color: var(--primary-color);
+    font-weight: bold;
+    padding: 12px 10px;
+    border: 1px solid var(--border-color);
+    text-align: center;
+    font-size: 0.9rem;
+}
+
+.chara-table td {
+    padding: 12px 10px;
+    border: 1px solid var(--border-color);
+    vertical-align: top;
+    background-color: #fff;
+}
+
+/* 列幅調整 */
+.col-no { width: 45px; }
+.col-name { width: 130px; }
+.col-rainbow, .col-gold-a, .col-gold-s { width: 160px; }
+
+.cell-no { text-align: center; color: #7f8c8d; font-size: 0.85rem; }
+
+/* スキル名と条件 */
+.skill-name {
+    font-weight: bold;
+    font-size: 0.95rem;
+    margin-bottom: 2px;
+}
+
+.rainbow { color: var(--rainbow-text); }
+.gold { color: var(--gold-text); }
+
+.condition {
+    font-size: 0.75rem;
+    color: #888;
+    background: #fdfdfd;
+    padding: 2px 4px;
+    border-radius: 3px;
+    display: inline-block;
+}
+
+/* コツタグ */
+.kotsu-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 5px;
+}
+
+.kotsu-tag {
+    background-color: #ebf5fb;
+    color: #2980b9;
+    font-size: 0.8rem;
+    padding: 2px 8px;
+    border-radius: 4px;
+    border: 1px solid #d6eaf8;
+}
+
+/* ホバー効果 */
+.chara-table tr:hover td {
+    background-color: #fdfaf0;
+}
+
+/* スマホ対応の調整 */
+@media (max-width: 600px) {
+    .search-page-container { padding: 15px; }
+    h1 { font-size: 1.4rem; }
+    .search-box { flex-direction: column; align-items: flex-start; }
+}
