@@ -184,7 +184,8 @@
 <script src="support-skills-blue-vs.js"></script>
 <script src="support-skills-blue-red.js"></script>
 <script src="support-skills-gold.js"></script>
-<script src="action-skills.js"></script>
+<script src="action-skills-blue.js"></script>
+<script src="action-skills-gold.js"></script>
 <script src="hissatsu-skills.js"></script>
 
 <script>
@@ -196,9 +197,10 @@
     const countEl = document.getElementById('resCount');
     const backToTopBtn = document.getElementById('backToTop');
 
+    // カテゴリ表示設定：JSデータ内の「category」の値と一致させる
     const config = {
-        "アクションスキル・青": { color: "var(--color-act-blue)", label: "アクション・青" },
-        "アクションスキル・金": { color: "var(--color-act-gold)", label: "アクション・金" },
+        "アクション・青": { color: "var(--color-act-blue)", label: "アクション・青" },
+        "アクション・金": { color: "var(--color-act-gold)", label: "アクション・金" },
         "特殊能力・青": { color: "var(--color-spec-blue)", label: "サポート・青" },
         "特殊能力・青赤": { color: "var(--color-spec-red)", label: "サポート・青赤" },
         "特殊能力・金": { color: "var(--color-spec-gold)", label: "サポート・金" },
@@ -211,19 +213,30 @@
         const attributeFilter = attrEl.value;
         const jobFilter = jobEl.value;
 
+        // 全ての外部JSからデータを統合（定義されていない場合に備えてチェック）
         const allAbilities = [
-            ...(typeof SUPPORT_SKILLS !== 'undefined' ? SUPPORT_SKILLS : []),
-            ...(typeof ACTION_SKILLS !== 'undefined' ? ACTION_SKILLS : []),
+            ...(typeof SUPPORT_SKILLS_BLUE !== 'undefined' ? SUPPORT_SKILLS_BLUE : []),
+            ...(typeof SUPPORT_SKILLS_BLUE_VS !== 'undefined' ? SUPPORT_SKILLS_BLUE_VS : []),
+            ...(typeof SUPPORT_SKILLS_BLUE_RED !== 'undefined' ? SUPPORT_SKILLS_BLUE_RED : []),
+            ...(typeof SUPPORT_SKILLS_GOLD !== 'undefined' ? SUPPORT_SKILLS_GOLD : []),
+            ...(typeof ACTION_SKILLS_BLUE !== 'undefined' ? ACTION_SKILLS_BLUE : []),
+            ...(typeof ACTION_SKILLS_GOLD !== 'undefined' ? ACTION_SKILLS_GOLD : []),
             ...(typeof HISSATSU_SKILLS !== 'undefined' ? HISSATSU_SKILLS : [])
         ];
 
         const filtered = allAbilities.filter(d => {
             const searchTarget = `${d.name} ${d.effect} ${d.condition}`.toLowerCase();
             const matchQ = !query || searchTarget.includes(query);
-            const style = config[d.category] || { label: d.category };
+            
+            // データ側のカテゴリ名から設定を取得
+            const style = config[d.category] || { label: d.category, color: "#8a6d55" };
+            
+            // フィルターとの照合（セレクトボックスのvalueと、configのlabelを比較）
             const matchCat = !categoryFilter || style.label === categoryFilter;
+            
             const matchAttr = !attributeFilter || (d.condition && d.condition.includes(attributeFilter));
             const matchJob = !jobFilter || (d.condition && d.condition.includes(jobFilter));
+            
             return matchQ && matchCat && matchAttr && matchJob;
         });
 

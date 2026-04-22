@@ -166,8 +166,8 @@
                         <option value="特殊能力・青赤">サポート・青赤</option>
                     </optgroup>
                     <optgroup label="アクション">
-                        <option value="アクションスキル・青">アクション・青</option>
-                        <option value="アクションスキル・金">アクション・金</option>
+                        <option value="アクション・青">アクション・青</option>
+                        <option value="アクション・金">アクション・金</option>
                     </optgroup>
                     <optgroup label="必殺技">
                         <option value="必殺技・虹">必殺技・虹</option>
@@ -221,13 +221,18 @@
 <script src="support-skills-blue-vs.js"></script>
 <script src="support-skills-blue-red.js"></script>
 <script src="support-skills-gold.js"></script>
-<script src="action-skills.js"></script>
+<script src="action-skills-blue.js"></script>
+<script src="action-skills-gold.js"></script>
 <script src="hissatsu-skills.js"></script>
 
 <script>
     const SPECIAL_ABILITIES = [
-        ...(typeof SUPPORT_SKILLS !== 'undefined' ? SUPPORT_SKILLS : []),
-        ...(typeof ACTION_SKILLS !== 'undefined' ? ACTION_SKILLS : []),
+        ...(typeof SUPPORT_SKILLS_BLUE !== 'undefined' ? SUPPORT_SKILLS_BLUE : []),
+        ...(typeof SUPPORT_SKILLS_BLUE_VS !== 'undefined' ? SUPPORT_SKILLS_BLUE_VS : []),
+        ...(typeof SUPPORT_SKILLS_BLUE_RED !== 'undefined' ? SUPPORT_SKILLS_BLUE_RED : []),
+        ...(typeof SUPPORT_SKILLS_GOLD !== 'undefined' ? SUPPORT_SKILLS_GOLD : []),
+        ...(typeof ACTION_SKILLS_BLUE !== 'undefined' ? ACTION_SKILLS_BLUE : []),
+        ...(typeof ACTION_SKILLS_GOLD !== 'undefined' ? ACTION_SKILLS_GOLD : []),
         ...(typeof HISSATSU_SKILLS !== 'undefined' ? HISSATSU_SKILLS : [])
     ];
 </script>
