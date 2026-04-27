@@ -24,7 +24,7 @@ const CHARA_MASTER_DATA = [
     { id: "20", name: "アネモカ", img: "img/20anemoka.png", rainbow: "トキシックブリーズ", goldA: "ポイズンアローズ", goldS: "魔族キラー", blueS: ["風攻撃", "広い視野", "見切り"], kotsu: [] },
     { id: "51", name: "リタリー", img: "img/51ritari.png", rainbow: "", goldA: "", goldS: "無頼漢の教え", blueS: ["物理防御", "忍耐", "防御耐性"], kotsu: [] },
     { id: "52", name: "トレアーティ", img: "img/52toreati.png", rainbow: "", goldA: "", goldS: "治癒の教え", blueS: ["魔法防御", "免疫強化", "回復効果"], kotsu: [] },
-    { id: "53", name: "エシュナ", img: "img/53eshuna.png", rainbow: "", goldA: "", goldS: "不朽の意志", blueS: ["生存報告", "けがしにくさ"], kotsu: [] },
+    { id: "53", name: "エシュナ", img: "img/53eshuna.png", rainbow: "", goldA: "", goldS: "不朽の意志", blueS: ["生存本能", "けがしにくさ"], kotsu: [] },
     { id: "54", name: "ピータ", img: "img/54peter.png", rainbow: "ガイアプロテクト", goldA: "生命の息吹", goldS: "植物キラー", blueS: ["がむしゃら", "対ゴブリン", "対植物",], kotsu: [] },
     { id: "55", name: "クートル", img: "img/55kuutoru.png", rainbow: "ライフオーブ", goldA: "フロストクラッシュ", goldS: "魔力耐性", blueS: ["無心の構え", "見切り", "癒しの心", "通常回復"], kotsu: [] }
 ];

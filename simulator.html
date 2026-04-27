@@ -90,6 +90,10 @@
         .cost-tag { font-size: 0.6rem; padding: 1px 4px; border-radius: 3px; font-weight: bold; background: rgba(0,0,0,0.3); }
         .skill-detail { padding: 10px; background: rgba(0,0,0,0.3); border-top: 1px dashed var(--story-border); font-size: 0.75rem; }
 
+        /* 詳細内のコツ修得方法スタイル */
+        .detail-tips { margin-top: 8px; padding-top: 8px; border-top: 1px dashed rgba(255,255,255,0.2); color: #ffd700; font-weight: bold; }
+        .detail-tips-label { color: var(--story-paper); font-size: 0.7rem; margin-right: 5px; }
+
         footer { text-align: center; padding: 40px 15px; background: #2c1a0c; color: #888; margin-top: 20px; font-size: 0.75rem; border-top: 2px solid var(--story-border); }
         .footer-nav { display: flex; flex-wrap: wrap; justify-content: center; gap: 15px; font-size: 0.85rem; margin-bottom: 20px; }
         .footer-nav a { color: #fff; text-decoration: none; opacity: 0.7; }
@@ -155,7 +159,7 @@
 
         <section class="card">
             <h2>スキル検索</h2>
-            <input type="text" id="search-input" class="search-input-main" placeholder="能力名で検索..." oninput="searchInSim()">
+            <input type="text" id="search-input" class="search-input-main" placeholder="能力名やコツ修得方法で検索..." oninput="searchInSim()">
             
             <div class="sim-filters">
                 <select id="fCat" onchange="searchInSim()" class="full-width-select">
@@ -211,8 +215,6 @@
         <a href="simulator.html">シミュレーター</a>
         <a href="search.html">特能図鑑</a>
         <a href="chara_search.html">コツ検索</a>
-        <a href="terms.html">利用規約</a>
-        <a href="https://x.com/purisukin14180" target="_blank">X</a>
     </div>
     <p class="copyright">&copy; 2026 プリスキンのパワアド育成ナビ</p>
 </footer>
@@ -235,6 +237,93 @@
         ...(typeof ACTION_SKILLS_GOLD !== 'undefined' ? ACTION_SKILLS_GOLD : []),
         ...(typeof HISSATSU_SKILLS !== 'undefined' ? HISSATSU_SKILLS : [])
     ];
+
+    /**
+     * スキルカード生成関数
+     */
+    function createSkillHtml(skill, isSelected = false) {
+        // コツ修得方法(tips_method)が存在する場合のみ表示
+        const tipsHtml = skill.tips_method ? `
+            <div class="detail-tips">
+                <span class="detail-tips-label">コツ修得方法:</span>${skill.tips_method}
+            </div>` : '';
+
+        return `
+            <div class="skill-container" id="skill-${skill.name}">
+                <div class="skill-summary" onclick="toggleDetail('${skill.name}')">
+                    <div class="summary-top">
+                        <div class="skill-name-area">
+                            <span class="toggle-icon">▼</span>
+                            ${skill.name}
+                        </div>
+                        <button onclick="event.stopPropagation(); ${isSelected ? 'removeAbility' : 'addAbility'}('${skill.name}')" 
+                                style="font-size:0.7rem; padding:2px 8px; background:${isSelected ? '#c0392b' : 'var(--story-accent)'}; color:white; border:none; border-radius:3px;">
+                            ${isSelected ? '削除' : '追加'}
+                        </button>
+                    </div>
+                    <div class="inline-costs">
+                        ${skill.costs.muscle ? `<span class="cost-tag exp-muscle">筋:${skill.costs.muscle}</span>` : ''}
+                        ${skill.costs.agile ? `<span class="cost-tag exp-agile">敏:${skill.costs.agile}</span>` : ''}
+                        ${skill.costs.tech ? `<span class="cost-tag exp-tech">技:${skill.costs.tech}</span>` : ''}
+                        ${skill.costs.intel ? `<span class="cost-tag exp-intel">知:${skill.costs.intel}</span>` : ''}
+                        ${skill.costs.mental ? `<span class="cost-tag exp-mental">精:${skill.costs.mental}</span>` : ''}
+                    </div>
+                </div>
+                <div class="skill-detail" id="detail-${skill.name}" style="display:none;">
+                    <div>【効果】 ${skill.effect}</div>
+                    <div style="margin-top:4px; opacity:0.8;">【条件】 ${skill.condition}</div>
+                    ${tipsHtml}
+                </div>
+            </div>
+        `;
+    }
+
+    /**
+     * シミュレーター内の検索ロジック
+     */
+    function searchInSim() {
+        const query = document.getElementById('search-input').value.toLowerCase();
+        const cat = document.getElementById('fCat').value;
+        const attr = document.getElementById('fAttr').value;
+        const job = document.getElementById('fJob').value;
+        const target = document.getElementById('fTarget').value;
+        
+        const results = SPECIAL_ABILITIES.filter(s => {
+            // 名前、効果、コツ修得方法から検索
+            const searchTarget = `${s.name} ${s.effect} ${s.tips_method || ''}`.toLowerCase();
+            const matchQ = !query || searchTarget.includes(query);
+            
+            const matchCat = !cat || s.category === cat;
+            const matchAttr = !attr || (s.condition && s.condition.includes(attr));
+            const matchJob = !job || (s.condition && s.condition.includes(job));
+            
+            // 目的別フィルター
+            let matchTarget = true;
+            if (target === "特効") matchTarget = s.effect.includes("特効") || s.effect.includes("特効");
+            if (target === "耐性") matchTarget = s.effect.includes("耐性");
+            if (target === "治療") matchTarget = s.effect.includes("回復") || s.effect.includes("HP");
+
+            return matchQ && matchCat && matchAttr && matchJob && matchTarget;
+        });
+
+        const resEl = document.getElementById('search-results');
+        resEl.innerHTML = results.map(s => createSkillHtml(s)).join('');
+    }
+
+    /**
+     * 詳細の開閉
+     */
+    function toggleDetail(name) {
+        const el = document.getElementById(`detail-${name}`);
+        const icon = document.querySelector(`#skill-${name} .toggle-icon`);
+        if (el.style.display === 'none') {
+            el.style.display = 'block';
+            icon.style.transform = 'rotate(180deg)';
+        } else {
+            el.style.display = 'none';
+            icon.style.transform = 'rotate(0deg)';
+        }
+    }
 </script>
 <script src="script.js"></script>
 </body>

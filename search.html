@@ -88,6 +88,10 @@
 
         .effect-box { padding: 12px; background: #dfccaf; border: 1px solid #c9ad88; border-radius: 4px; font-size: 0.85rem; font-weight: bold; color: var(--story-text); }
         .condition-text { font-size: 0.75rem; color: #7c5535; margin-top: 8px; display: block; font-weight: bold; }
+        
+        /* コツ修得方法用スタイル */
+        .tips-method { font-size: 0.75rem; color: var(--story-accent); margin-top: 4px; display: block; font-weight: 800; }
+        .tips-label { color: #7c5535; font-weight: bold; margin-right: 5px; }
 
         #backToTop {
             position: fixed; bottom: 30px; right: 30px; width: 50px; height: 50px;
@@ -122,7 +126,7 @@
 <div class="container">
     <div class="sidebar">
         <h3>条件で絞り込む</h3>
-        <input type="text" id="q" class="search-input" placeholder="スキル名や効果で検索...">
+        <input type="text" id="q" class="search-input" placeholder="スキル名・効果・修得方法で検索...">
 
         <div class="filter-section">
             <div class="filter-title">カテゴリ</div>
@@ -197,7 +201,6 @@
     const countEl = document.getElementById('resCount');
     const backToTopBtn = document.getElementById('backToTop');
 
-    // カテゴリ表示設定：JSデータ内の「category」の値と一致させる
     const config = {
         "アクション・青": { color: "var(--color-act-blue)", label: "アクション・青" },
         "アクション・金": { color: "var(--color-act-gold)", label: "アクション・金" },
@@ -213,7 +216,6 @@
         const attributeFilter = attrEl.value;
         const jobFilter = jobEl.value;
 
-        // 全ての外部JSからデータを統合（定義されていない場合に備えてチェック）
         const allAbilities = [
             ...(typeof SUPPORT_SKILLS_BLUE !== 'undefined' ? SUPPORT_SKILLS_BLUE : []),
             ...(typeof SUPPORT_SKILLS_BLUE_VS !== 'undefined' ? SUPPORT_SKILLS_BLUE_VS : []),
@@ -225,15 +227,12 @@
         ];
 
         const filtered = allAbilities.filter(d => {
-            const searchTarget = `${d.name} ${d.effect} ${d.condition}`.toLowerCase();
+            // 検索ターゲットに tips_method を含める
+            const searchTarget = `${d.name} ${d.effect} ${d.condition} ${d.tips_method || ''}`.toLowerCase();
             const matchQ = !query || searchTarget.includes(query);
             
-            // データ側のカテゴリ名から設定を取得
             const style = config[d.category] || { label: d.category, color: "#8a6d55" };
-            
-            // フィルターとの照合（セレクトボックスのvalueと、configのlabelを比較）
             const matchCat = !categoryFilter || style.label === categoryFilter;
-            
             const matchAttr = !attributeFilter || (d.condition && d.condition.includes(attributeFilter));
             const matchJob = !jobFilter || (d.condition && d.condition.includes(jobFilter));
             
@@ -252,6 +251,9 @@
             let badgeBg = style.color;
             if (d.category === "必殺技・虹") badgeBg = "linear-gradient(45deg, #d35400, #f1c40f, #e67e22)";
             
+            // コツ修得方法の表示
+            const tipsHtml = d.tips_method ? `<span class="tips-method"><span class="tips-label">コツ修得方法:</span>${d.tips_method}</span>` : '';
+
             return `
                 <div class="ability-card ${style.class || ''}" style="border-left-color: ${style.color}">
                     <div class="card-top">
@@ -267,6 +269,7 @@
                     </div>
                     <div class="effect-box">効果: ${d.effect}</div>
                     <span class="condition-text">修得条件: ${d.condition}</span>
+                    ${tipsHtml}
                 </div>
             `;
         }).join('');

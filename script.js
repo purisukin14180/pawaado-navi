@@ -1,6 +1,6 @@
 /**
  * プリスキンのパワアド育成ナビ - ロジック完全版
- * 感度調整（単押し/長押し分離・スマホ二重反応防止）
+ * 修正内容：コツ修得方法（tips_method）の表示・検索機能を追加
  */
 
 let selectedAbilities = [];
@@ -64,7 +64,9 @@ function searchInSim() {
     if (typeof SPECIAL_ABILITIES === 'undefined') return;
 
     const filtered = SPECIAL_ABILITIES.filter(a => {
-        const matchQ = !q || a.name.toLowerCase().includes(q);
+        // 検索対象にコツ修得方法を追加
+        const searchTarget = `${a.name} ${a.effect} ${a.tips_method || ''}`.toLowerCase();
+        const matchQ = !q || searchTarget.includes(q);
         const matchC = !fCat || a.category === fCat;
         const matchA = !fAttr || (a.condition && a.condition.includes(fAttr));
         const matchJ = !fJob || (a.condition && a.condition.includes(fJob));
@@ -75,6 +77,10 @@ function searchInSim() {
     filtered.forEach((a, i) => {
         const div = document.createElement('div');
         div.className = 'skill-container';
+        
+        // コツ修得方法HTML
+        const tipsHtml = a.tips_method ? `<div class="detail-tips"><span class="detail-tips-label">コツ修得方法:</span>${a.tips_method}</div>` : '';
+
         div.innerHTML = `
             <div class="skill-summary" onclick="toggleDetail('search', ${i})">
                 <div class="summary-top">
@@ -85,7 +91,9 @@ function searchInSim() {
                 <div class="inline-costs">${getCostTags(a.costs)}</div>
             </div>
             <div class="skill-detail" id="search-detail-${i}" style="display:none;">
-                <p>効果: ${a.effect}</p><p>条件: ${a.condition}</p>
+                <p>【効果】 ${a.effect}</p>
+                <p style="opacity:0.8;">【条件】 ${a.condition}</p>
+                ${tipsHtml}
             </div>`;
         area.appendChild(div);
     });
@@ -122,29 +130,17 @@ function init() {
     loadData();
 }
 
-/**
- * 改良版：増減ボタン制御
- * タッチとマウスの二重反応をisProcessingで完全に防ぎ、
- * ディレイを0.45秒に設定して「1上げる」操作を確実にします。
- */
 function startHold(e, id, d, type) {
     if (isProcessing) return;
-    
-    // タッチイベントの場合はブラウザのデフォルト挙動（クリックの擬似発火）を抑制
     if (e.type === 'touchstart') {
         if (e.cancelable) e.preventDefault();
     }
-    
     isProcessing = true;
-
-    // 1回目：即座に変更
     changeValue(id, d, type);
-
-    // 長押し判定用のタイマー（450ms = 0.45秒）
     holdTimer = setTimeout(() => {
         holdInterval = setInterval(() => {
             changeValue(id, d, type);
-        }, 120); // 連続加算の速度を少し落として制御性を高める（120ms間隔）
+        }, 120);
     }, 450); 
 }
 
@@ -153,8 +149,6 @@ function stopHold() {
     clearInterval(holdInterval);
     holdTimer = null;
     holdInterval = null;
-    
-    // 離した後の誤爆防止のため50msだけロックしてから解除
     setTimeout(() => {
         isProcessing = false;
     }, 50);
@@ -211,7 +205,7 @@ function calculateTotal() {
 }
 
 function getCostTags(costs, rate = 1.0) {
-    const items = [{k:'muscle', c:'c-m', l:'筋'}, {k:'agile', c:'c-g', l:'敏'}, {k:'tech', c:'c-t', l:'技'}, {k:'intel', c:'c-i', l:'知'}, {k:'mental', c:'c-me', l:'精'}];
+    const items = [{k:'muscle', c:'exp-muscle', l:'筋'}, {k:'agile', c:'exp-agile', l:'敏'}, {k:'tech', c:'exp-tech', l:'技'}, {k:'intel', c:'exp-intel', l:'知'}, {k:'mental', c:'exp-mental', l:'精'}];
     return items.map(i => {
         const v = Math.floor((costs[i.k] || 0) * rate);
         return v > 0 ? `<span class="cost-tag ${i.c}">${i.l}${v}</span>` : '';
@@ -225,7 +219,28 @@ function renderSelected() {
     const kDisc = [0, 0.5, 0.6, 0.7, 0.8, 0.9];
     area.innerHTML = selectedAbilities.map((a, i) => {
         const r = 1 - kDisc[a.kotsu || 0];
-        return `<div class="skill-container"><div class="skill-summary" onclick="toggleDetail('sel', ${i})"><div class="summary-top"><div class="skill-name-area"><span class="toggle-icon" id="sel-icon-${i}">▶</span>${a.name}</div><div class="skill-right" onclick="event.stopPropagation()"><select onchange="updateKotsu(${i}, this.value)">${[0,1,2,3,4,5].map(v => `<option value="${v}" ${a.kotsu==v?'selected':''}>L${v||'無'}</option>`).join('')}</select><button onclick="removeAbility('${a.name}')" style="color:#ff6b6b; border:none; background:none; font-size:1.2rem; cursor:pointer;">×</button></div></div><div class="inline-costs">${getCostTags(a.costs, r)}</div></div><div class="skill-detail" id="sel-detail-${i}" style="display:none;"><p>効果: ${a.effect}</p><p>条件: ${a.condition}</p></div></div>`;
+        const tipsHtml = a.tips_method ? `<div class="detail-tips"><span class="detail-tips-label">コツ修得方法:</span>${a.tips_method}</div>` : '';
+        
+        return `
+        <div class="skill-container">
+            <div class="skill-summary" onclick="toggleDetail('sel', ${i})">
+                <div class="summary-top">
+                    <div class="skill-name-area"><span class="toggle-icon" id="sel-icon-${i}">▶</span>${a.name}</div>
+                    <div class="skill-right" onclick="event.stopPropagation()">
+                        <select onchange="updateKotsu(${i}, this.value)">
+                            ${[0,1,2,3,4,5].map(v => `<option value="${v}" ${a.kotsu==v?'selected':''}>L${v||'無'}</option>`).join('')}
+                        </select>
+                        <button onclick="removeAbility('${a.name}')" style="color:#ff6b6b; border:none; background:none; font-size:1.2rem; cursor:pointer;">×</button>
+                    </div>
+                </div>
+                <div class="inline-costs">${getCostTags(a.costs, r)}</div>
+            </div>
+            <div class="skill-detail" id="sel-detail-${i}" style="display:none;">
+                <p>【効果】 ${a.effect}</p>
+                <p style="opacity:0.8;">【条件】 ${a.condition}</p>
+                ${tipsHtml}
+            </div>
+        </div>`;
     }).join('');
 }
 
